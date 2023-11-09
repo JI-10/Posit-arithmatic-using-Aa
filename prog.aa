@@ -1,3 +1,12 @@
+$volatile $module [pmul19] $in(P1 P2 : $uint<16>) $out(result : $uint<16>) $is 
+{
+    $volatile $call posit16_to_FP19 (P1) (F1)
+    $volatile $call posit16_to_FP19 (P2) (F2)
+    $volatile $call fmul19 (F1 F2) (F19_res)
+    $volatile $call FP19_to_posit16 (F19_res) (result)
+}
+
+
 $volatile $module [find_leftmost_bit_16] $in (num:$uint<16> bit : $uint<1>) $out (index : $uint<6> not_found : $uint<1>)
 $is
 {
@@ -195,13 +204,7 @@ $volatile $module [classify_FP32] $in(F : $uint<32>) $out(zero normal inf : $uin
     inf := (exp > 28)
 }
 
-$module [pmul19] $in(P1 P2 : $uint<16>) $out(result : $uint<16>) $is 
-{
-    $volatile $call posit16_to_FP19 (P1) (F1)
-    $volatile $call posit16_to_FP19 (P2) (F2)
-    $volatile $call fmul19 (F1 F2) (F19_res)
-    $volatile $call FP19_to_posit16 (F19_res) (result)
-}
+
 
 $volatile $module [classifyFp19] $in(num : $uint<19>) $out(zero normal inf : $uint<1>) $is 
 {
