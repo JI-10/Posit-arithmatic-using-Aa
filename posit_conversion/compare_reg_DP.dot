@@ -1,7 +1,0 @@
-digraph data_path {
-  konst_7_wire_constant [shape=ellipse];
-  UGT_u16_u1_8_inst [shape=rectangle];
-num  -> UGT_u16_u1_8_inst;
-konst_7_wire_constant  -> UGT_u16_u1_8_inst;
-UGT_u16_u1_8_inst -> reg_type;
-}
