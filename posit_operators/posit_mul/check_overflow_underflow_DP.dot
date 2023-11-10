@@ -1,0 +1,12 @@
+digraph data_path {
+  konst_649_wire_constant [shape=ellipse];
+  konst_654_wire_constant [shape=ellipse];
+  SGT_i8_u1_650_inst [shape=rectangle];
+num  -> SGT_i8_u1_650_inst;
+konst_649_wire_constant  -> SGT_i8_u1_650_inst;
+SGT_i8_u1_650_inst -> overflow;
+  SLT_i8_u1_655_inst [shape=rectangle];
+num  -> SLT_i8_u1_655_inst;
+konst_654_wire_constant  -> SLT_i8_u1_655_inst;
+SLT_i8_u1_655_inst -> underflow;
+}

@@ -1,0 +1,127 @@
+$volatile $module [classify_posit]
+$in ( num : $uint<16>  )
+$out ( zero : $uint<1>   normal : $uint<1>   inf : $uint<1>  )
+$is
+{
+  $volatile exp_all_zero := (( $slice num 14 0 )  == 0 ) $buffering 1
+  normal := ( ~ exp_all_zero ) $buffering 1
+  zero := (( ~ (num [] 15 ) ) & exp_all_zero) $buffering 1
+  inf := ((num [] 15 ) & exp_all_zero) $buffering 1
+}
+$volatile $module [find_leftmost_bit_2]
+$in ( num : $uint<2>   bit : $uint<1>  )
+$out ( index : $uint<6>   not_found : $uint<1>  )
+$is
+{
+  $volatile first_bit := ((num [] 0 ) == (bit [] 0 )) $buffering 1
+  $volatile second_bit := ((num [] 1 ) == (bit [] 0 )) $buffering 1
+  not_found := ( ~ (first_bit | second_bit) ) $buffering 1
+  index := ($bitcast ($uint<6>) ( $mux second_bit ($bitcast ($uint<1>) _b1  )  ($bitcast ($uint<1>) _b0  ) )  ) $buffering 1
+}
+$volatile $module [find_leftmost_bit_4]
+$in ( num : $uint<4>   bit : $uint<1>  )
+$out ( index : $uint<6>   not_found : $uint<1>  )
+$is
+{
+  $volatile num_h := ( $slice num 3 2 )  $buffering 1
+  $volatile num_l := ( $slice num 1 0 )  $buffering 1
+  $volatile 	$call find_leftmost_bit_2 (num_h bit ) (index_h not_found_h ) 
+  $volatile 	$call find_leftmost_bit_2 (num_l bit ) (index_l not_found_l ) 
+  $volatile ind_h := (index_h + 2 ) $buffering 1
+  not_found := (not_found_h & not_found_l) $buffering 1
+  index := ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  ) $buffering 1
+}
+$volatile $module [find_leftmost_bit_8]
+$in ( num : $uint<8>   bit : $uint<1>  )
+$out ( index : $uint<6>   not_found : $uint<1>  )
+$is
+{
+  $volatile num_h := ( $slice num 7 4 )  $buffering 1
+  $volatile num_l := ( $slice num 3 0 )  $buffering 1
+  $volatile 	$call find_leftmost_bit_4 (num_h bit ) (index_h not_found_h ) 
+  $volatile 	$call find_leftmost_bit_4 (num_l bit ) (index_l not_found_l ) 
+  $volatile ind_h := (index_h + 4 ) $buffering 1
+  not_found := (not_found_h & not_found_l) $buffering 1
+  index := ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  ) $buffering 1
+}
+$volatile $module [find_leftmost_bit_16]
+$in ( num : $uint<16>   bit : $uint<1>  )
+$out ( index : $uint<6>   not_found : $uint<1>  )
+$is
+{
+  $volatile num_h := ( $slice num 15 8 )  $buffering 1
+  $volatile num_l := ( $slice num 7 0 )  $buffering 1
+  $volatile 	$call find_leftmost_bit_8 (num_h (bit [] 0 ) ) (index_h not_found_h ) 
+  $volatile 	$call find_leftmost_bit_8 (num_l (bit [] 0 ) ) (index_l not_found_l ) 
+  $volatile ind_h := (index_h + 8 ) $buffering 1
+  not_found := (not_found_h & not_found_l) $buffering 1
+  index := ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  ) $buffering 1
+}
+$volatile $module [sll_16]
+$in ( num : $uint<16>   shift : $uint<4>  )
+$out ( shifted : $uint<16>  )
+$is
+{
+  X0 := ( $mux (shift [] 0 ) (( $slice num 14 0 )  && ($bitcast ($uint<1>) _b0  ))  num )  $buffering 1
+  X1 := ( $mux (shift [] 1 ) (( $slice X0 13 0 )  && ($bitcast ($uint<2>) _b0  ))  X0 )  $buffering 1
+  X2 := ( $mux (shift [] 2 ) (( $slice X1 11 0 )  && ($bitcast ($uint<4>) _b0  ))  X1 )  $buffering 1
+  X3 := ( $mux (shift [] 3 ) (( $slice X2 7 0 )  && ($bitcast ($uint<8>) _b0  ))  X2 )  $buffering 1
+  shifted := X3 $buffering 1
+}
+$volatile $module [split_posit]
+$in ( num : $uint<16>  )
+$out ( sign : $uint<1>   exp : $uint<6>   fraction : $uint<12>  )
+$is
+{
+  $constant  ONE_2 : $uint<2>:= 3  
+  $volatile regime_bit := (num [] 14 ) $buffering 1
+  $volatile start_2_bits := ( $mux regime_bit ONE_2  ($bitcast ($uint<2>) _b0  ) )  $buffering 1
+  $volatile temp_num := (start_2_bits && ( $slice num 13 0 ) ) $buffering 1
+  $volatile 	$call find_leftmost_bit_16 (temp_num ( ~ regime_bit ) ) (index not_found ) 
+  $volatile frac_shift := ($bitcast ($uint<4>) (17  - index) ) $buffering 1
+  $volatile exp_shift := ($bitcast ($uint<4>) (16  - index) ) $buffering 1
+  $volatile reg_cnt := (14  - index) $buffering 1
+  $volatile reg_cnt_gen := ( $mux regime_bit (reg_cnt - 1 )  reg_cnt )  $buffering 1
+  $volatile reg_mul2 := (2  * reg_cnt_gen) $buffering 1
+  $volatile 	$call sll_16 (num exp_shift ) (shifted_to_find_exp ) 
+  $volatile exp_bit := ($bitcast ($uint<6>) (shifted_to_find_exp [] 15 ) ) $buffering 1
+  $volatile exp_biased := (( $mux regime_bit (28  + reg_mul2)  (28  - reg_mul2) )  + exp_bit) $buffering 1
+  $volatile 	$call sll_16 (num frac_shift ) (shifted_frac ) 
+  exp := ($bitcast ($uint<6>) exp_biased ) $buffering 1
+  sign := (num [] 15 ) $buffering 1
+  fraction := ( $slice shifted_frac 15 4 )  $buffering 1
+}
+$volatile $module [complement]
+$in ( num : $uint<16>  )
+$out ( result : $uint<16>  )
+$is
+{
+  $volatile convert := (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<16>) _b0  )) $buffering 1
+  $volatile res_temp := (convert - (($bitcast ($uint<1>) _b0  ) && num)) $buffering 1
+  result := ( $slice res_temp 15 0 )  $buffering 1
+}
+$module [Posit16_to_FP32]
+$in ( P : $uint<16>  )
+$out ( F : $uint<32>  )
+$is
+{
+  $constant  ZERO_32 : $uint<32>:= 1593835520  
+  $constant  INF_32 : $uint<32>:= 3741319168  
+  $volatile 	$call classify_posit (P ) (zero normal inf ) 
+  $volatile 	$call split_posit (P ) (sign exp fraction ) 
+  $volatile 	$call complement (P ) (P_c ) 
+  $volatile 	$call split_posit (P_c ) (sign_c exp_c fraction_c ) 
+  $volatile exp_32 := (99  + ($bitcast ($uint<8>) exp )) $buffering 1
+  $volatile frac_32 := (fraction && ($bitcast ($uint<11>) _b0  )) $buffering 1
+  $volatile exp_32_c := (($bitcast ($uint<8>) exp_c ) + 99 ) $buffering 1
+  $volatile frac_32_c := (fraction_c && ($bitcast ($uint<11>) _b0  )) $buffering 1
+  F := ( $mux normal ( $mux sign ((($bitcast ($uint<1>) _b1  ) && exp_32_c) && frac_32_c)  ((($bitcast ($uint<1>) _b0  ) && exp_32) && frac_32) )   ( $mux zero ZERO_32  INF_32 )  )  $buffering 1// bits of buffering = 32. 
+}
+$module [global_storage_initializer_]
+$in ()
+$out ()
+$is
+{
+  $null
+}
+// use of gated clocks in modules 

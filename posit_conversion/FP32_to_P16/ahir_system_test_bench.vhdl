@@ -1,0 +1,130 @@
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+library GhdlLink;
+use GhdlLink.Utility_Package.all;
+use GhdlLink.Vhpi_Foreign.all;
+entity ahir_system_Test_Bench is -- 
+  -- 
+end entity;
+architecture VhpiLink of ahir_system_Test_Bench is -- 
+  component ahir_system is -- 
+    port (-- 
+      FP32_to_posit16_F : in  std_logic_vector(31 downto 0);
+      FP32_to_posit16_P : out  std_logic_vector(15 downto 0);
+      FP32_to_posit16_tag_in: in std_logic_vector(1 downto 0);
+      FP32_to_posit16_tag_out: out std_logic_vector(1 downto 0);
+      FP32_to_posit16_start_req : in std_logic;
+      FP32_to_posit16_start_ack : out std_logic;
+      FP32_to_posit16_fin_req   : in std_logic;
+      FP32_to_posit16_fin_ack   : out std_logic;
+      clk : in std_logic;
+      reset : in std_logic); -- 
+    -- 
+  end component;
+  signal clk: std_logic := '0';
+  signal reset: std_logic := '1';
+  signal FP32_to_posit16_F :  std_logic_vector(31 downto 0) := (others => '0');
+  signal FP32_to_posit16_P :   std_logic_vector(15 downto 0);
+  signal FP32_to_posit16_tag_in: std_logic_vector(1 downto 0);
+  signal FP32_to_posit16_tag_out: std_logic_vector(1 downto 0);
+  signal FP32_to_posit16_start_req : std_logic := '0';
+  signal FP32_to_posit16_start_ack : std_logic := '0';
+  signal FP32_to_posit16_fin_req   : std_logic := '0';
+  signal FP32_to_posit16_fin_ack   : std_logic := '0';
+  -- 
+begin --
+  -- clock/reset generation 
+  clk <= not clk after 5 ns;
+  -- assert reset for four clocks.
+  process
+  begin --
+    Vhpi_Initialize;
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    reset <= '0';
+    while true loop --
+      wait until clk = '0';
+      Vhpi_Listen;
+      Vhpi_Send;
+      --
+    end loop;
+    wait;
+    --
+  end process;
+  -- connect all the top-level modules to Vhpi
+  process
+  variable val_string, obj_ref: VhpiString;
+  begin --
+    wait until reset = '0';
+    -- let the DUT come out of reset.... give it 4 cycles.
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    while true loop -- 
+      wait until clk = '0';
+      wait for 1 ns;
+      obj_ref := Pack_String_To_VHPI_String("FP32_to_posit16 req");
+      Vhpi_Get_Port_Value(obj_ref,val_string,1);
+      FP32_to_posit16_start_req <= To_Std_Logic(val_string);
+      obj_ref := Pack_String_To_Vhpi_String("FP32_to_posit16 0");
+      Vhpi_Get_Port_Value(obj_ref,val_string, 32);
+      FP32_to_posit16_F <= Unpack_String(val_string,32);
+      wait for 0 ns;
+      if FP32_to_posit16_start_req = '1' then -- 
+        while true loop --
+          wait until clk = '1';
+          if FP32_to_posit16_start_ack = '1' then exit; end if;--
+        end loop; 
+        FP32_to_posit16_start_req <= '0';
+        FP32_to_posit16_fin_req <= '1';
+        while true loop -- 
+          wait until clk = '1';
+          if FP32_to_posit16_fin_ack = '1' then exit; end if; --  
+        end loop; 
+        FP32_to_posit16_fin_req <= '0';
+        -- 
+      end if; 
+      obj_ref := Pack_String_To_Vhpi_String("FP32_to_posit16 ack");
+      val_string := To_String(FP32_to_posit16_fin_ack);
+      Vhpi_Set_Port_Value(obj_ref,val_string,1);
+      obj_ref := Pack_String_To_Vhpi_String("FP32_to_posit16 0");
+      val_string := Pack_SLV_To_Vhpi_String(FP32_to_posit16_P);
+      Vhpi_Set_Port_Value(obj_ref,val_string,16);
+      -- 
+    end loop;
+    --
+  end process;
+  ahir_system_instance: ahir_system -- 
+    port map ( -- 
+      FP32_to_posit16_F => FP32_to_posit16_F,
+      FP32_to_posit16_P => FP32_to_posit16_P,
+      FP32_to_posit16_tag_in => FP32_to_posit16_tag_in,
+      FP32_to_posit16_tag_out => FP32_to_posit16_tag_out,
+      FP32_to_posit16_start_req => FP32_to_posit16_start_req,
+      FP32_to_posit16_start_ack => FP32_to_posit16_start_ack,
+      FP32_to_posit16_fin_req  => FP32_to_posit16_fin_req, 
+      FP32_to_posit16_fin_ack  => FP32_to_posit16_fin_ack ,
+      clk => clk,
+      reset => reset); -- 
+  -- 
+end VhpiLink;

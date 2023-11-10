@@ -1,0 +1,17 @@
+digraph data_path {
+  CONCAT_u1_u17_610_wire [shape=ellipse];
+  convert_604 [shape=ellipse];
+  res_temp_612 [shape=ellipse];
+  type_cast_608_wire_constant [shape=ellipse];
+  CONCAT_u1_u17_610_inst [shape=diamond];
+type_cast_608_wire_constant  -> CONCAT_u1_u17_610_inst;
+num  -> CONCAT_u1_u17_610_inst;
+CONCAT_u1_u17_610_inst -> CONCAT_u1_u17_610_wire;
+  SUB_u17_u17_611_inst [shape=diamond];
+convert_604  -> SUB_u17_u17_611_inst;
+CONCAT_u1_u17_610_wire  -> SUB_u17_u17_611_inst;
+SUB_u17_u17_611_inst -> res_temp_612;
+  slice_615_inst [shape=rectangle];
+res_temp_612  -> slice_615_inst;
+slice_615_inst -> result;
+}

@@ -1,0 +1,161 @@
+$volatile $module [find_leftmost_bit_16] $in (num:$uint<16> bit : $uint<1>) $out (index : $uint<6> not_found : $uint<1>)
+$is
+{
+    $volatile num_h := ($slice num 15 8)
+    $volatile num_l := ($slice num 7 0)
+    $volatile $call find_leftmost_bit_8 (num_h (bit [] 0)) (index_h not_found_h)
+    $volatile $call find_leftmost_bit_8 (num_l (bit [] 0)) (index_l not_found_l)
+    $volatile ind_h := (index_h + 8)
+    not_found := ($reduce & not_found_h not_found_l)
+    index := ($bitcast ($uint<6>) ($mux not_found_h index_l ind_h))
+}
+
+$volatile $module [find_leftmost_bit_8] $in(num : $uint<8> bit : $uint<1>) $out(index : $uint<6> not_found : $uint<1>) 
+$is 
+{
+    $volatile num_h := ($slice num 7 4)
+    $volatile num_l := ($slice num 3 0)
+    $volatile $call find_leftmost_bit_4 (num_h bit) (index_h not_found_h)
+    $volatile $call find_leftmost_bit_4 (num_l bit) (index_l not_found_l)
+    $volatile ind_h := (index_h + 4)
+    not_found := ($reduce & not_found_h not_found_l)
+    index := ($bitcast ($uint<6>) ($mux not_found_h index_l ind_h))
+}
+
+$volatile $module [find_leftmost_bit_4] $in(num : $uint<4> bit : $uint<1>) $out(index : $uint<6> not_found : $uint<1>) 
+$is 
+{
+    $volatile num_h := ($slice num 3 2)
+    $volatile num_l := ($slice num 1 0)
+    $volatile $call find_leftmost_bit_2 (num_h bit) (index_h not_found_h)
+    $volatile $call find_leftmost_bit_2 (num_l bit) (index_l not_found_l)
+    $volatile ind_h := (index_h + 2)
+    not_found := ($reduce & not_found_h not_found_l)
+    index := ($bitcast ($uint<6>) ($mux not_found_h index_l ind_h))
+}
+
+$volatile $module [find_leftmost_bit_2] $in(num : $uint<2> bit : $uint<1>) $out(index : $uint<6> not_found : $uint<1>)
+$is 
+{
+    $volatile first_bit := ((num [] 0) == (bit [] 0))
+    $volatile second_bit := ((num [] 1) == (bit [] 0))
+    not_found := (~($reduce | first_bit second_bit))
+    index := ($bitcast ($uint<6>) ($mux second_bit  $one<1> $zero<1>))
+    
+}
+
+$volatile $module [sll_16] $in(num:$uint<16> shift:$uint<4>) $out(shifted:$uint<16>) $is 
+{
+    X0 := ($mux (shift [] 0) ($concat ($slice num 14 0) $zero<1>) num)
+    X1 := ($mux (shift [] 1) ($concat ($slice X0 13 0) $zero<2>) X0)
+    X2 := ($mux (shift [] 2) ($concat ($slice X1 11 0) $zero<4>) X1)
+    shifted := ($mux (shift [] 3) ($concat ($slice X2 7 0) $zero<8>) X2)
+}
+
+$volatile $module [complement] $in(num:$uint<16>) $out(result:$uint<16>) $is 
+{
+    $volatile convert := ($concat $one<1> $zero<16>)
+    $volatile res_temp := (convert - ($concat $zero<1> num))
+    result := ($slice res_temp 15 0)
+}
+
+
+$volatile $module [make_fraction] $in(num : $uint<6> frac : $uint<12>) $out(fraction : $uint<16>) $is
+{
+    $volatile odd := ((num & 1) > 0) //if there is any exp bit
+    $volatile reg_type := (num > 27) //regime 1
+    x := ($reduce | reg_type odd)
+    $volatile reg_cnt := ((($mux reg_type (num-28) (28-num))>>1) + ($mux x 1 0))
+    //shifting fraction by cnt+3 bits to allign with regime and exp
+    $volatile $call shift_toMake_fraction (($concat frac $zero<5>) ($bitcast ($uint<4>) (reg_cnt+3))) (fraction_1)
+    $volatile is_there_frac := (reg_cnt < 13)
+    $volatile fraction_2 := ($slice fraction_1 16 1)
+    //rounding implemented by adding 1 more bit shifted fraction
+    fraction := ($mux is_there_frac ($mux (fraction_1 [] 0) (fraction_2+1) fraction_2) $zero<16>)
+}
+
+$volatile $module [shift_toMake_fraction] $in(num : $uint<17> shift : $uint<4>) $out(fraction:$uint<17>) $is 
+{
+    X0 := ($mux (shift [] 0) (num>>1) num)
+    X1 := ($mux (shift [] 1) (X0>>2) X0)
+    X2 := ($mux (shift [] 2) (X1>>4) X1)
+    fraction := ($mux (shift [] 3) (X2>>8) X2)
+}
+
+$volatile $module [make_exponent] $in(num : $uint<6>) $out(reg_exp : $uint<16>) $is 
+{
+    $volatile odd := ((num & 1) > 0) //if there is any exp bit
+    $volatile reg_type := (num > 27) //regime 1
+    x := ($reduce | reg_type odd)
+    $volatile reg_cnt := ((($mux reg_type (num-28) (28-num))>>1) + ($mux x 1 0))
+    $volatile $call shift_toMake_regime (($bitcast ($uint<4>) (reg_cnt - 1)) reg_type) (regime) //regime part is ready
+    //need to find the last regime bit for placing exponent bit
+    $volatile temp := ($mux reg_type ($reduce | regime ($concat $one<1> $zero<15>)) regime)
+    //finding r_dash bit
+    $volatile $call find_leftmost_bit_16 (temp (~reg_type)) (r_dash_index not_found) 
+    //shifing 1 till (r_dash-1)th bit
+    $volatile $call sll_16 ($one<16> ($bitcast ($uint<4>) (r_dash_index - 1))) (shifted_1_exponent)
+    $volatile is_there_exp := (reg_cnt<14)
+    reg_exp := ($reduce | regime ($mux (odd & is_there_exp) shifted_1_exponent $zero<16>))
+}
+
+$volatile $module [shift_toMake_regime] $in(shift : $uint<4> reg_type : $uint<1>) $out(regime : $uint<16>) $is 
+{
+    $constant ONE_1: $uint<1> := 1
+    $constant ONE_2: $uint<2> := _b11
+    $constant ONE_4: $uint<4> := _b1111
+    $constant ONE_8: $uint<8> := _b11111111
+    temp := ($concat $zero<1> ($mux reg_type ONE_1 $zero<1>) ($mux reg_type $zero<1> ONE_1) $zero<13>)
+    // for regime 0, temp = 001000..0 
+    //for regime 1, temp = 010000..0
+    X0 := ($mux (shift [] 0) ($reduce | (temp>>1)
+                 ($concat $zero<1> ($mux reg_type ONE_1 $zero<1>) $zero<14>)) temp)
+    X1 := ($mux (shift [] 1) ($reduce | (X0>>2) 
+                ($concat $zero<1> ($mux reg_type ONE_2 $zero<2>) $zero<13>)) X0) 
+    X2 := ($mux (shift [] 2) ($reduce | (X1>>4) 
+                ($concat $zero<1> ($mux reg_type ONE_4 $zero<4>) $zero<11>)) X1)
+    regime := ($mux (shift [] 3) ($reduce | (X2>>8) 
+                ($concat $zero<1> ($mux reg_type ONE_8 $zero<8>) $zero<7>)) X2)
+}
+
+$volatile $module [classify_FP32] $in(F : $uint<32>) $out(zero normal inf : $uint<1>) $is 
+{
+    $volatile exp := (($bitcast ($int<8>) ($slice F 30 23)) - 127)
+    zero := (exp < -28)
+    normal := ((exp > -29) & (exp < 29))
+    inf := (exp > 28)
+}
+
+
+// $module [FP32_to_posit16] $in(F : $uint<32>) $out(P : $uint<16>) $is 
+$module [FP32_to_posit16] $in(F : $uint<32>) $out(P : $uint<16>) $is 
+{
+    $volatile $call classify_FP32 (F) (zero normal inf)
+    $volatile exp_biased_28 := ($slice (($slice F 30 23) - 99) 5 0)
+    $volatile $call make_exponent (exp_biased_28) (posit_exp)
+    $volatile $call make_fraction (exp_biased_28 ($slice F 22 11)) (posit_frac)
+    $volatile posit_wo_sign := ($reduce | posit_exp posit_frac)
+    $volatile $call complement (posit_wo_sign) (posit_c)
+    P := ($mux normal ($mux (F [] 31) posit_c posit_wo_sign) 
+                ($mux zero $zero<16> ($concat $one<1> $zero<15>))
+        )
+    // P := ($bitcast ($uint<16>) $zero<1>)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

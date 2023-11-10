@@ -1,0 +1,18 @@
+digraph data_path {
+  F19_res_1074 [shape=ellipse];
+  F1_1067 [shape=ellipse];
+  F2_1070 [shape=ellipse];
+  call_stmt_1067_call [shape=diamond];
+P1  -> call_stmt_1067_call;
+call_stmt_1067_call -> F1_1067;
+  call_stmt_1070_call [shape=diamond];
+P2  -> call_stmt_1070_call;
+call_stmt_1070_call -> F2_1070;
+  call_stmt_1074_call [shape=diamond];
+F1_1067  -> call_stmt_1074_call;
+F2_1070  -> call_stmt_1074_call;
+call_stmt_1074_call -> F19_res_1074;
+  call_stmt_1077_call [shape=diamond];
+F19_res_1074  -> call_stmt_1077_call;
+call_stmt_1077_call -> result;
+}

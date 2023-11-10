@@ -1,0 +1,1854 @@
+// Virtual circuit produced from Aa description by Aa2VC 
+// Declared gated clocks.
+$volatile $module [classify_FP32] 
+{
+  $in F:$int<32>
+  // can point into  foreign( $void )
+  $out zero:$int<1>
+  // can point into  foreign( $void )
+  normal:$int<1>
+  // can point into  foreign( $void )
+  inf:$int<1>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %classify_FP32
+  //  file prog.linked.opt.aa, line 1
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %classify_FP32
+    //  file prog.linked.opt.aa, line 1
+    // 127 
+    $constant $W[konst_13_wire_constant] : $int<8> := _b01111111// 127
+    // -28 
+    $constant $W[konst_18_wire_constant] : $int<8> := _b11100100// -28
+    // -29 
+    $constant $W[konst_23_wire_constant] : $int<8> := _b11100011// -29
+    // 29 
+    $constant $W[konst_26_wire_constant] : $int<8> := _b00011101// 29
+    // 28 
+    $constant $W[konst_32_wire_constant] : $int<8> := _b00011100// 28
+    // 	$volatile exp := (($bitcast ($int<8>) ( $slice F 30 23 )  ) - 127 ) $buffering 1
+    //  file prog.linked.opt.aa, line 6
+    // ( $slice F 30 23 ) 
+    $intermediate $W[slice_11_wire] : $int<8>
+    // ($bitcast ($int<8>) ( $slice F 30 23 )  )
+    $intermediate $W[type_cast_12_wire] : $int<8>
+    // exp
+    $W[exp_15] : $int<8>
+    // 	zero := (exp < -28 ) $buffering 1
+    //  file prog.linked.opt.aa, line 7
+    // zero
+    // 	normal := ((exp > -29 ) & (exp < 29 )) $buffering 1
+    //  file prog.linked.opt.aa, line 8
+    // (exp > -29 )
+    $intermediate $W[SGT_i8_u1_24_wire] : $int<1>
+    // (exp < 29 )
+    $intermediate $W[SLT_i8_u1_27_wire] : $int<1>
+    // normal
+    // 	inf := (exp > 28 ) $buffering 1
+    //  file prog.linked.opt.aa, line 9
+    // inf
+    // 	$volatile exp := (($bitcast ($int<8>) ( $slice F 30 23 )  ) - 127 ) $buffering 1
+    //  file prog.linked.opt.aa, line 6
+    // ( $slice F 30 23 ) 
+    [:] [slice_11_inst] (F 30 23) (slice_11_wire)  $flowthrough
+    $delay slice_11_inst 0
+    // ($bitcast ($int<8>) ( $slice F 30 23 )  )
+    # := [type_cast_12_inst] (slice_11_wire) (type_cast_12_wire)   $flowthrough
+    $delay type_cast_12_inst 0
+    // (($bitcast ($int<8>) ( $slice F 30 23 )  ) - 127 )
+    -[SUB_i8_i8_14_inst] (type_cast_12_wire konst_13_wire_constant) (exp_15)   $flowthrough 
+    $delay SUB_i8_i8_14_inst 0
+    // 	zero := (exp < -28 ) $buffering 1
+    //  file prog.linked.opt.aa, line 7
+    // (exp < -28 )
+    $S<$S[SLT_i8_u1_19_inst] (exp_15 konst_18_wire_constant) (zero)   
+    $buffering  $out SLT_i8_u1_19_inst zero 1
+    $delay SLT_i8_u1_19_inst 1
+    // 	normal := ((exp > -29 ) & (exp < 29 )) $buffering 1
+    //  file prog.linked.opt.aa, line 8
+    // (exp > -29 )
+    $S>$S[SGT_i8_u1_24_inst] (exp_15 konst_23_wire_constant) (SGT_i8_u1_24_wire)   $flowthrough 
+    $delay SGT_i8_u1_24_inst 0
+    // (exp < 29 )
+    $S<$S[SLT_i8_u1_27_inst] (exp_15 konst_26_wire_constant) (SLT_i8_u1_27_wire)   $flowthrough 
+    $delay SLT_i8_u1_27_inst 0
+    // ((exp > -29 ) & (exp < 29 ))
+    &[AND_u1_u1_28_inst] (SGT_i8_u1_24_wire SLT_i8_u1_27_wire) (normal)   
+    $buffering  $out AND_u1_u1_28_inst normal 1
+    $delay AND_u1_u1_28_inst 1
+    // 	inf := (exp > 28 ) $buffering 1
+    //  file prog.linked.opt.aa, line 9
+    // (exp > 28 )
+    $S>$S[SGT_i8_u1_33_inst] (exp_15 konst_32_wire_constant) (inf)   
+    $buffering  $out SGT_i8_u1_33_inst inf 1
+    $delay SGT_i8_u1_33_inst 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$volatile $module [shift_toMake_regime] 
+{
+  $in shift:$int<4>
+  // can point into  foreign( $void )
+  reg_type:$int<1>
+  // can point into  foreign( $void )
+  $out regime:$int<16>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %shift_toMake_regime
+  //  file prog.linked.opt.aa, line 11
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %shift_toMake_regime
+    //  file prog.linked.opt.aa, line 11
+    $constant $W[xxshift_toMake_regimexxONE_1] : $int<1> := _b1// 1
+    $constant $W[xxshift_toMake_regimexxONE_2] : $int<2> := _b11// 3
+    $constant $W[xxshift_toMake_regimexxONE_4] : $int<4> := _b1111// 15
+    $constant $W[xxshift_toMake_regimexxONE_8] : $int<8> := _b11111111// 255
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_57_wire_constant] : $int<1> := _b0// 0
+    // ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) 
+    // ONE_1
+    $constant $W[R_ONE_1_59_wire_constant] : $int<1> := _b1// 1
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_61_wire_constant] : $int<1> := _b0// 0
+    // ( $mux reg_type ($bitcast ($uint<1>) _b0  )  ONE_1 ) 
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_66_wire_constant] : $int<1> := _b0// 0
+    // ONE_1
+    $constant $W[R_ONE_1_67_wire_constant] : $int<1> := _b1// 1
+    // ($bitcast ($uint<13>) _b0  )
+    $constant $W[type_cast_71_wire_constant] : $int<13> := _b0000000000000// 0
+    // ( $mux (shift [] 0 ) ((temp >> 1 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && ($bitcast ($uint<14>) _b0  )))  temp ) 
+    // 0 
+    $constant $W[konst_77_wire_constant] : $int<4> := _b0000// 0
+    // 1 
+    $constant $W[konst_80_wire_constant] : $int<16> := _b0000000000000001// 1
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_83_wire_constant] : $int<1> := _b0// 0
+    // ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) 
+    // ONE_1
+    $constant $W[R_ONE_1_85_wire_constant] : $int<1> := _b1// 1
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_87_wire_constant] : $int<1> := _b0// 0
+    // ($bitcast ($uint<14>) _b0  )
+    $constant $W[type_cast_92_wire_constant] : $int<14> := _b00000000000000// 0
+    // ( $mux (shift [] 1 ) ((X0 >> 2 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) ) && ($bitcast ($uint<13>) _b0  )))  X0 ) 
+    // 1 
+    $constant $W[konst_100_wire_constant] : $int<4> := _b0001// 1
+    // 2 
+    $constant $W[konst_103_wire_constant] : $int<16> := _b0000000000000010// 2
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_106_wire_constant] : $int<1> := _b0// 0
+    // ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) 
+    // ONE_2
+    $constant $W[R_ONE_2_108_wire_constant] : $int<2> := _b11// 3
+    // ($bitcast ($uint<2>) _b0  )
+    $constant $W[type_cast_110_wire_constant] : $int<2> := _b00// 0
+    // ($bitcast ($uint<13>) _b0  )
+    $constant $W[type_cast_114_wire_constant] : $int<13> := _b0000000000000// 0
+    // ( $mux (shift [] 2 ) ((X1 >> 4 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) ) && ($bitcast ($uint<11>) _b0  )))  X1 ) 
+    // 2 
+    $constant $W[konst_122_wire_constant] : $int<4> := _b0010// 2
+    // 4 
+    $constant $W[konst_125_wire_constant] : $int<16> := _b0000000000000100// 4
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_128_wire_constant] : $int<1> := _b0// 0
+    // ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) 
+    // ONE_4
+    $constant $W[R_ONE_4_130_wire_constant] : $int<4> := _b1111// 15
+    // ($bitcast ($uint<4>) _b0  )
+    $constant $W[type_cast_132_wire_constant] : $int<4> := _b0000// 0
+    // ($bitcast ($uint<11>) _b0  )
+    $constant $W[type_cast_137_wire_constant] : $int<11> := _b00000000000// 0
+    // ( $mux (shift [] 3 ) ((X2 >> 8 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) ) && ($bitcast ($uint<7>) _b0  )))  X2 ) 
+    // 3 
+    $constant $W[konst_145_wire_constant] : $int<4> := _b0011// 3
+    // 8 
+    $constant $W[konst_148_wire_constant] : $int<16> := _b0000000000001000// 8
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_151_wire_constant] : $int<1> := _b0// 0
+    // ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) 
+    // ONE_8
+    $constant $W[R_ONE_8_153_wire_constant] : $int<8> := _b11111111// 255
+    // ($bitcast ($uint<8>) _b0  )
+    $constant $W[type_cast_155_wire_constant] : $int<8> := _b00000000// 0
+    // ($bitcast ($uint<7>) _b0  )
+    $constant $W[type_cast_160_wire_constant] : $int<7> := _b0000000// 0
+    // 	temp := ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && (( $mux reg_type ($bitcast ($uint<1>) _b0  )  ONE_1 )  && ($bitcast ($uint<13>) _b0  ))) $buffering 1
+    //  file prog.linked.opt.aa, line 20
+    // ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) 
+    $intermediate $W[MUX_62_wire] : $int<1>
+    // (($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) )
+    $intermediate $W[CONCAT_u1_u2_63_wire] : $int<2>
+    // ( $mux reg_type ($bitcast ($uint<1>) _b0  )  ONE_1 ) 
+    $intermediate $W[MUX_68_wire] : $int<1>
+    // (( $mux reg_type ($bitcast ($uint<1>) _b0  )  ONE_1 )  && ($bitcast ($uint<13>) _b0  ))
+    $intermediate $W[CONCAT_u1_u14_72_wire] : $int<14>
+    // temp
+    $W[temp_74] : $int<16>
+    // 	X0 := ( $mux (shift [] 0 ) ((temp >> 1 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && ($bitcast ($uint<14>) _b0  )))  temp )  $buffering 1
+    //  file prog.linked.opt.aa, line 21
+    // (shift [] 0 )
+    $intermediate $W[BITSEL_u4_u1_78_wire] : $int<1>
+    // (temp >> 1 )
+    $intermediate $W[LSHR_u16_u16_81_wire] : $int<16>
+    // ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) 
+    $intermediate $W[MUX_88_wire] : $int<1>
+    // (($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) )
+    $intermediate $W[CONCAT_u1_u2_89_wire] : $int<2>
+    // ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && ($bitcast ($uint<14>) _b0  ))
+    $intermediate $W[CONCAT_u2_u16_93_wire] : $int<16>
+    // ((temp >> 1 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && ($bitcast ($uint<14>) _b0  )))
+    $intermediate $W[OR_u16_u16_94_wire] : $int<16>
+    // X0
+    $W[X0_97] : $int<16>
+    // 	X1 := ( $mux (shift [] 1 ) ((X0 >> 2 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) ) && ($bitcast ($uint<13>) _b0  )))  X0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 22
+    // (shift [] 1 )
+    $intermediate $W[BITSEL_u4_u1_101_wire] : $int<1>
+    // (X0 >> 2 )
+    $intermediate $W[LSHR_u16_u16_104_wire] : $int<16>
+    // ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) 
+    $intermediate $W[MUX_111_wire] : $int<2>
+    // (($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) )
+    $intermediate $W[CONCAT_u1_u3_112_wire] : $int<3>
+    // ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) ) && ($bitcast ($uint<13>) _b0  ))
+    $intermediate $W[CONCAT_u3_u16_115_wire] : $int<16>
+    // ((X0 >> 2 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) ) && ($bitcast ($uint<13>) _b0  )))
+    $intermediate $W[OR_u16_u16_116_wire] : $int<16>
+    // X1
+    $W[X1_119] : $int<16>
+    // 	X2 := ( $mux (shift [] 2 ) ((X1 >> 4 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) ) && ($bitcast ($uint<11>) _b0  )))  X1 )  $buffering 1
+    //  file prog.linked.opt.aa, line 23
+    // (shift [] 2 )
+    $intermediate $W[BITSEL_u4_u1_123_wire] : $int<1>
+    // (X1 >> 4 )
+    $intermediate $W[LSHR_u16_u16_126_wire] : $int<16>
+    // ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) 
+    $intermediate $W[MUX_133_wire] : $int<4>
+    // (($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) )
+    $intermediate $W[CONCAT_u1_u5_134_wire] : $int<5>
+    // ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) ) && ($bitcast ($uint<11>) _b0  ))
+    $intermediate $W[CONCAT_u5_u16_138_wire] : $int<16>
+    // ((X1 >> 4 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) ) && ($bitcast ($uint<11>) _b0  )))
+    $intermediate $W[OR_u16_u16_139_wire] : $int<16>
+    // X2
+    $W[X2_142] : $int<16>
+    // 	regime := ( $mux (shift [] 3 ) ((X2 >> 8 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) ) && ($bitcast ($uint<7>) _b0  )))  X2 )  $buffering 1
+    //  file prog.linked.opt.aa, line 24
+    // (shift [] 3 )
+    $intermediate $W[BITSEL_u4_u1_146_wire] : $int<1>
+    // (X2 >> 8 )
+    $intermediate $W[LSHR_u16_u16_149_wire] : $int<16>
+    // ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) 
+    $intermediate $W[MUX_156_wire] : $int<8>
+    // (($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) )
+    $intermediate $W[CONCAT_u1_u9_157_wire] : $int<9>
+    // ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) ) && ($bitcast ($uint<7>) _b0  ))
+    $intermediate $W[CONCAT_u9_u16_161_wire] : $int<16>
+    // ((X2 >> 8 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) ) && ($bitcast ($uint<7>) _b0  )))
+    $intermediate $W[OR_u16_u16_162_wire] : $int<16>
+    // regime
+    // 	temp := ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && (( $mux reg_type ($bitcast ($uint<1>) _b0  )  ONE_1 )  && ($bitcast ($uint<13>) _b0  ))) $buffering 1
+    //  file prog.linked.opt.aa, line 20
+    // ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) 
+    ? [MUX_62_inst] (reg_type R_ONE_1_59_wire_constant type_cast_61_wire_constant) (MUX_62_wire)  $flowthrough
+    // (($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) )
+    &&[CONCAT_u1_u2_63_inst] (type_cast_57_wire_constant MUX_62_wire) (CONCAT_u1_u2_63_wire)   $flowthrough 
+    $delay CONCAT_u1_u2_63_inst 0
+    // ( $mux reg_type ($bitcast ($uint<1>) _b0  )  ONE_1 ) 
+    ? [MUX_68_inst] (reg_type type_cast_66_wire_constant R_ONE_1_67_wire_constant) (MUX_68_wire)  $flowthrough
+    // (( $mux reg_type ($bitcast ($uint<1>) _b0  )  ONE_1 )  && ($bitcast ($uint<13>) _b0  ))
+    &&[CONCAT_u1_u14_72_inst] (MUX_68_wire type_cast_71_wire_constant) (CONCAT_u1_u14_72_wire)   $flowthrough 
+    $delay CONCAT_u1_u14_72_inst 0
+    // ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && (( $mux reg_type ($bitcast ($uint<1>) _b0  )  ONE_1 )  && ($bitcast ($uint<13>) _b0  )))
+    &&[CONCAT_u2_u16_73_inst] (CONCAT_u1_u2_63_wire CONCAT_u1_u14_72_wire) (temp_74)   
+    $buffering  $out CONCAT_u2_u16_73_inst temp_74 1
+    $delay CONCAT_u2_u16_73_inst 1
+    // 	X0 := ( $mux (shift [] 0 ) ((temp >> 1 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && ($bitcast ($uint<14>) _b0  )))  temp )  $buffering 1
+    //  file prog.linked.opt.aa, line 21
+    // (shift [] 0 )
+    [][BITSEL_u4_u1_78_inst] (shift konst_77_wire_constant) (BITSEL_u4_u1_78_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_78_inst 0
+    // (temp >> 1 )
+    >>[LSHR_u16_u16_81_inst] (temp_74 konst_80_wire_constant) (LSHR_u16_u16_81_wire)   $flowthrough 
+    $delay LSHR_u16_u16_81_inst 0
+    // ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) 
+    ? [MUX_88_inst] (reg_type R_ONE_1_85_wire_constant type_cast_87_wire_constant) (MUX_88_wire)  $flowthrough
+    // (($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) )
+    &&[CONCAT_u1_u2_89_inst] (type_cast_83_wire_constant MUX_88_wire) (CONCAT_u1_u2_89_wire)   $flowthrough 
+    $delay CONCAT_u1_u2_89_inst 0
+    // ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && ($bitcast ($uint<14>) _b0  ))
+    &&[CONCAT_u2_u16_93_inst] (CONCAT_u1_u2_89_wire type_cast_92_wire_constant) (CONCAT_u2_u16_93_wire)   $flowthrough 
+    $delay CONCAT_u2_u16_93_inst 0
+    // ((temp >> 1 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && ($bitcast ($uint<14>) _b0  )))
+    |[OR_u16_u16_94_inst] (LSHR_u16_u16_81_wire CONCAT_u2_u16_93_wire) (OR_u16_u16_94_wire)   $flowthrough 
+    $delay OR_u16_u16_94_inst 0
+    // ( $mux (shift [] 0 ) ((temp >> 1 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_1  ($bitcast ($uint<1>) _b0  ) ) ) && ($bitcast ($uint<14>) _b0  )))  temp ) 
+    ? [MUX_96_inst] (BITSEL_u4_u1_78_wire OR_u16_u16_94_wire temp_74) (X0_97) 
+    $buffering  $out MUX_96_inst X0_97 1
+    // 	X1 := ( $mux (shift [] 1 ) ((X0 >> 2 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) ) && ($bitcast ($uint<13>) _b0  )))  X0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 22
+    // (shift [] 1 )
+    [][BITSEL_u4_u1_101_inst] (shift konst_100_wire_constant) (BITSEL_u4_u1_101_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_101_inst 0
+    // (X0 >> 2 )
+    >>[LSHR_u16_u16_104_inst] (X0_97 konst_103_wire_constant) (LSHR_u16_u16_104_wire)   $flowthrough 
+    $delay LSHR_u16_u16_104_inst 0
+    // ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) 
+    ? [MUX_111_inst] (reg_type R_ONE_2_108_wire_constant type_cast_110_wire_constant) (MUX_111_wire)  $flowthrough
+    // (($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) )
+    &&[CONCAT_u1_u3_112_inst] (type_cast_106_wire_constant MUX_111_wire) (CONCAT_u1_u3_112_wire)   $flowthrough 
+    $delay CONCAT_u1_u3_112_inst 0
+    // ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) ) && ($bitcast ($uint<13>) _b0  ))
+    &&[CONCAT_u3_u16_115_inst] (CONCAT_u1_u3_112_wire type_cast_114_wire_constant) (CONCAT_u3_u16_115_wire)   $flowthrough 
+    $delay CONCAT_u3_u16_115_inst 0
+    // ((X0 >> 2 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) ) && ($bitcast ($uint<13>) _b0  )))
+    |[OR_u16_u16_116_inst] (LSHR_u16_u16_104_wire CONCAT_u3_u16_115_wire) (OR_u16_u16_116_wire)   $flowthrough 
+    $delay OR_u16_u16_116_inst 0
+    // ( $mux (shift [] 1 ) ((X0 >> 2 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_2  ($bitcast ($uint<2>) _b0  ) ) ) && ($bitcast ($uint<13>) _b0  )))  X0 ) 
+    ? [MUX_118_inst] (BITSEL_u4_u1_101_wire OR_u16_u16_116_wire X0_97) (X1_119) 
+    $buffering  $out MUX_118_inst X1_119 1
+    // 	X2 := ( $mux (shift [] 2 ) ((X1 >> 4 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) ) && ($bitcast ($uint<11>) _b0  )))  X1 )  $buffering 1
+    //  file prog.linked.opt.aa, line 23
+    // (shift [] 2 )
+    [][BITSEL_u4_u1_123_inst] (shift konst_122_wire_constant) (BITSEL_u4_u1_123_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_123_inst 0
+    // (X1 >> 4 )
+    >>[LSHR_u16_u16_126_inst] (X1_119 konst_125_wire_constant) (LSHR_u16_u16_126_wire)   $flowthrough 
+    $delay LSHR_u16_u16_126_inst 0
+    // ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) 
+    ? [MUX_133_inst] (reg_type R_ONE_4_130_wire_constant type_cast_132_wire_constant) (MUX_133_wire)  $flowthrough
+    // (($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) )
+    &&[CONCAT_u1_u5_134_inst] (type_cast_128_wire_constant MUX_133_wire) (CONCAT_u1_u5_134_wire)   $flowthrough 
+    $delay CONCAT_u1_u5_134_inst 0
+    // ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) ) && ($bitcast ($uint<11>) _b0  ))
+    &&[CONCAT_u5_u16_138_inst] (CONCAT_u1_u5_134_wire type_cast_137_wire_constant) (CONCAT_u5_u16_138_wire)   $flowthrough 
+    $delay CONCAT_u5_u16_138_inst 0
+    // ((X1 >> 4 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) ) && ($bitcast ($uint<11>) _b0  )))
+    |[OR_u16_u16_139_inst] (LSHR_u16_u16_126_wire CONCAT_u5_u16_138_wire) (OR_u16_u16_139_wire)   $flowthrough 
+    $delay OR_u16_u16_139_inst 0
+    // ( $mux (shift [] 2 ) ((X1 >> 4 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_4  ($bitcast ($uint<4>) _b0  ) ) ) && ($bitcast ($uint<11>) _b0  )))  X1 ) 
+    ? [MUX_141_inst] (BITSEL_u4_u1_123_wire OR_u16_u16_139_wire X1_119) (X2_142) 
+    $buffering  $out MUX_141_inst X2_142 1
+    // 	regime := ( $mux (shift [] 3 ) ((X2 >> 8 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) ) && ($bitcast ($uint<7>) _b0  )))  X2 )  $buffering 1
+    //  file prog.linked.opt.aa, line 24
+    // (shift [] 3 )
+    [][BITSEL_u4_u1_146_inst] (shift konst_145_wire_constant) (BITSEL_u4_u1_146_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_146_inst 0
+    // (X2 >> 8 )
+    >>[LSHR_u16_u16_149_inst] (X2_142 konst_148_wire_constant) (LSHR_u16_u16_149_wire)   $flowthrough 
+    $delay LSHR_u16_u16_149_inst 0
+    // ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) 
+    ? [MUX_156_inst] (reg_type R_ONE_8_153_wire_constant type_cast_155_wire_constant) (MUX_156_wire)  $flowthrough
+    // (($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) )
+    &&[CONCAT_u1_u9_157_inst] (type_cast_151_wire_constant MUX_156_wire) (CONCAT_u1_u9_157_wire)   $flowthrough 
+    $delay CONCAT_u1_u9_157_inst 0
+    // ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) ) && ($bitcast ($uint<7>) _b0  ))
+    &&[CONCAT_u9_u16_161_inst] (CONCAT_u1_u9_157_wire type_cast_160_wire_constant) (CONCAT_u9_u16_161_wire)   $flowthrough 
+    $delay CONCAT_u9_u16_161_inst 0
+    // ((X2 >> 8 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) ) && ($bitcast ($uint<7>) _b0  )))
+    |[OR_u16_u16_162_inst] (LSHR_u16_u16_149_wire CONCAT_u9_u16_161_wire) (OR_u16_u16_162_wire)   $flowthrough 
+    $delay OR_u16_u16_162_inst 0
+    // ( $mux (shift [] 3 ) ((X2 >> 8 ) | ((($bitcast ($uint<1>) _b0  ) && ( $mux reg_type ONE_8  ($bitcast ($uint<8>) _b0  ) ) ) && ($bitcast ($uint<7>) _b0  )))  X2 ) 
+    ? [MUX_164_inst] (BITSEL_u4_u1_146_wire OR_u16_u16_162_wire X2_142) (regime) 
+    $buffering  $out MUX_164_inst regime 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$volatile $module [find_leftmost_bit_2] 
+{
+  $in num:$int<2>
+  // can point into  foreign( $void )
+  bit:$int<1>
+  // can point into  foreign( $void )
+  $out index:$int<6>
+  // can point into  foreign( $void )
+  not_found:$int<1>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %find_leftmost_bit_2
+  //  file prog.linked.opt.aa, line 26
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %find_leftmost_bit_2
+    //  file prog.linked.opt.aa, line 26
+    // 0 
+    $constant $W[konst_175_wire_constant] : $int<2> := _b00// 0
+    // 0 
+    $constant $W[konst_178_wire_constant] : $int<1> := _b0// 0
+    // 1 
+    $constant $W[konst_184_wire_constant] : $int<2> := _b01// 1
+    // 0 
+    $constant $W[konst_187_wire_constant] : $int<1> := _b0// 0
+    // ( $mux second_bit ($bitcast ($uint<1>) _b1  )  ($bitcast ($uint<1>) _b0  ) ) 
+    // ($bitcast ($uint<1>) _b1  )
+    $constant $W[type_cast_200_wire_constant] : $int<1> := _b1// 1
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_202_wire_constant] : $int<1> := _b0// 0
+    // 	$volatile first_bit := ((num [] 0 ) == (bit [] 0 )) $buffering 1
+    //  file prog.linked.opt.aa, line 31
+    // (num [] 0 )
+    $intermediate $W[BITSEL_u2_u1_176_wire] : $int<1>
+    // (bit [] 0 )
+    $intermediate $W[BITSEL_u1_u1_179_wire] : $int<1>
+    // first_bit
+    $W[first_bit_181] : $int<1>
+    // 	$volatile second_bit := ((num [] 1 ) == (bit [] 0 )) $buffering 1
+    //  file prog.linked.opt.aa, line 32
+    // (num [] 1 )
+    $intermediate $W[BITSEL_u2_u1_185_wire] : $int<1>
+    // (bit [] 0 )
+    $intermediate $W[BITSEL_u1_u1_188_wire] : $int<1>
+    // second_bit
+    $W[second_bit_190] : $int<1>
+    // 	not_found := ( ~ (first_bit | second_bit) ) $buffering 1
+    //  file prog.linked.opt.aa, line 33
+    // (first_bit | second_bit)
+    $intermediate $W[OR_u1_u1_194_wire] : $int<1>
+    // not_found
+    // 	index := ($bitcast ($uint<6>) ( $mux second_bit ($bitcast ($uint<1>) _b1  )  ($bitcast ($uint<1>) _b0  ) )  ) $buffering 1
+    //  file prog.linked.opt.aa, line 34
+    // ( $mux second_bit ($bitcast ($uint<1>) _b1  )  ($bitcast ($uint<1>) _b0  ) ) 
+    $intermediate $W[MUX_203_wire] : $int<1>
+    // index
+    // 	$volatile first_bit := ((num [] 0 ) == (bit [] 0 )) $buffering 1
+    //  file prog.linked.opt.aa, line 31
+    // (num [] 0 )
+    [][BITSEL_u2_u1_176_inst] (num konst_175_wire_constant) (BITSEL_u2_u1_176_wire)   $flowthrough 
+    $delay BITSEL_u2_u1_176_inst 0
+    // (bit [] 0 )
+    [][BITSEL_u1_u1_179_inst] (bit konst_178_wire_constant) (BITSEL_u1_u1_179_wire)   $flowthrough 
+    $delay BITSEL_u1_u1_179_inst 0
+    // ((num [] 0 ) == (bit [] 0 ))
+    ==[EQ_u1_u1_180_inst] (BITSEL_u2_u1_176_wire BITSEL_u1_u1_179_wire) (first_bit_181)   $flowthrough 
+    $delay EQ_u1_u1_180_inst 0
+    // 	$volatile second_bit := ((num [] 1 ) == (bit [] 0 )) $buffering 1
+    //  file prog.linked.opt.aa, line 32
+    // (num [] 1 )
+    [][BITSEL_u2_u1_185_inst] (num konst_184_wire_constant) (BITSEL_u2_u1_185_wire)   $flowthrough 
+    $delay BITSEL_u2_u1_185_inst 0
+    // (bit [] 0 )
+    [][BITSEL_u1_u1_188_inst] (bit konst_187_wire_constant) (BITSEL_u1_u1_188_wire)   $flowthrough 
+    $delay BITSEL_u1_u1_188_inst 0
+    // ((num [] 1 ) == (bit [] 0 ))
+    ==[EQ_u1_u1_189_inst] (BITSEL_u2_u1_185_wire BITSEL_u1_u1_188_wire) (second_bit_190)   $flowthrough 
+    $delay EQ_u1_u1_189_inst 0
+    // 	not_found := ( ~ (first_bit | second_bit) ) $buffering 1
+    //  file prog.linked.opt.aa, line 33
+    // (first_bit | second_bit)
+    |[OR_u1_u1_194_inst] (first_bit_181 second_bit_190) (OR_u1_u1_194_wire)   $flowthrough 
+    $delay OR_u1_u1_194_inst 0
+    // ( ~ (first_bit | second_bit) )
+    ~ [NOT_u1_u1_195_inst] (OR_u1_u1_194_wire) (not_found)  
+    $buffering  $out NOT_u1_u1_195_inst not_found 1
+    $delay NOT_u1_u1_195_inst 1
+    // 	index := ($bitcast ($uint<6>) ( $mux second_bit ($bitcast ($uint<1>) _b1  )  ($bitcast ($uint<1>) _b0  ) )  ) $buffering 1
+    //  file prog.linked.opt.aa, line 34
+    // ( $mux second_bit ($bitcast ($uint<1>) _b1  )  ($bitcast ($uint<1>) _b0  ) ) 
+    ? [MUX_203_inst] (second_bit_190 type_cast_200_wire_constant type_cast_202_wire_constant) (MUX_203_wire)  $flowthrough
+    // ($bitcast ($uint<6>) ( $mux second_bit ($bitcast ($uint<1>) _b1  )  ($bitcast ($uint<1>) _b0  ) )  )
+    # := [type_cast_204_inst] (MUX_203_wire) (index)    
+    $buffering  $out type_cast_204_inst index 1
+    $delay type_cast_204_inst 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$volatile $module [find_leftmost_bit_4] 
+{
+  $in num:$int<4>
+  // can point into  foreign( $void )
+  bit:$int<1>
+  // can point into  foreign( $void )
+  $out index:$int<6>
+  // can point into  foreign( $void )
+  not_found:$int<1>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %find_leftmost_bit_4
+  //  file prog.linked.opt.aa, line 36
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %find_leftmost_bit_4
+    //  file prog.linked.opt.aa, line 36
+    //  $volatile 	$call find_leftmost_bit_2 (num_h bit ) (index_h not_found_h ) 
+    //  file prog.linked.opt.aa, line 43
+    //  $volatile 	$call find_leftmost_bit_2 (num_l bit ) (index_l not_found_l ) 
+    //  file prog.linked.opt.aa, line 44
+    // 2 
+    $constant $W[konst_232_wire_constant] : $int<6> := _b000010// 2
+    // ( $mux not_found_h index_l  ind_h ) 
+    // 	$volatile num_h := ( $slice num 3 2 )  $buffering 1
+    //  file prog.linked.opt.aa, line 41
+    // num_h
+    $W[num_h_215] : $int<2>
+    // 	$volatile num_l := ( $slice num 1 0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 42
+    // num_l
+    $W[num_l_219] : $int<2>
+    //  $volatile 	$call find_leftmost_bit_2 (num_h bit ) (index_h not_found_h ) 
+    //  file prog.linked.opt.aa, line 43
+    // index_h
+    $W[index_h_224] : $int<6>
+    // not_found_h
+    $W[not_found_h_224] : $int<1>
+    //  $volatile 	$call find_leftmost_bit_2 (num_l bit ) (index_l not_found_l ) 
+    //  file prog.linked.opt.aa, line 44
+    // index_l
+    $W[index_l_229] : $int<6>
+    // not_found_l
+    $W[not_found_l_229] : $int<1>
+    // 	$volatile ind_h := (index_h + 2 ) $buffering 1
+    //  file prog.linked.opt.aa, line 45
+    // ind_h
+    $W[ind_h_234] : $int<6>
+    // 	not_found := (not_found_h & not_found_l) $buffering 1
+    //  file prog.linked.opt.aa, line 46
+    // not_found
+    // 	index := ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  ) $buffering 1
+    //  file prog.linked.opt.aa, line 47
+    // ( $mux not_found_h index_l  ind_h ) 
+    $intermediate $W[MUX_244_wire] : $int<6>
+    // index
+    // 	$volatile num_h := ( $slice num 3 2 )  $buffering 1
+    //  file prog.linked.opt.aa, line 41
+    // ( $slice num 3 2 ) 
+    [:] [slice_214_inst] (num 3 2) (num_h_215)  $flowthrough
+    $delay slice_214_inst 0
+    // 	$volatile num_l := ( $slice num 1 0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 42
+    // ( $slice num 1 0 ) 
+    [:] [slice_218_inst] (num 1 0) (num_l_219)  $flowthrough
+    $delay slice_218_inst 0
+    //  $volatile 	$call find_leftmost_bit_2 (num_h bit ) (index_h not_found_h ) 
+    //  file prog.linked.opt.aa, line 43
+    $call [call_stmt_224_call] $module find_leftmost_bit_2(num_h_215 bit) (index_h_224 not_found_h_224)   $flowthrough
+    //  $volatile 	$call find_leftmost_bit_2 (num_l bit ) (index_l not_found_l ) 
+    //  file prog.linked.opt.aa, line 44
+    $call [call_stmt_229_call] $module find_leftmost_bit_2(num_l_219 bit) (index_l_229 not_found_l_229)   $flowthrough
+    // 	$volatile ind_h := (index_h + 2 ) $buffering 1
+    //  file prog.linked.opt.aa, line 45
+    // (index_h + 2 )
+    +[ADD_u6_u6_233_inst] (index_h_224 konst_232_wire_constant) (ind_h_234)   $flowthrough 
+    $delay ADD_u6_u6_233_inst 0
+    // 	not_found := (not_found_h & not_found_l) $buffering 1
+    //  file prog.linked.opt.aa, line 46
+    // (not_found_h & not_found_l)
+    &[AND_u1_u1_238_inst] (not_found_h_224 not_found_l_229) (not_found)   
+    $buffering  $out AND_u1_u1_238_inst not_found 1
+    $delay AND_u1_u1_238_inst 1
+    // 	index := ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  ) $buffering 1
+    //  file prog.linked.opt.aa, line 47
+    // ( $mux not_found_h index_l  ind_h ) 
+    ? [MUX_244_inst] (not_found_h_224 index_l_229 ind_h_234) (MUX_244_wire)  $flowthrough
+    // ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  )
+    # := [type_cast_245_inst] (MUX_244_wire) (index)    
+    $buffering  $out type_cast_245_inst index 1
+    $delay type_cast_245_inst 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$volatile $module [find_leftmost_bit_8] 
+{
+  $in num:$int<8>
+  // can point into  foreign( $void )
+  bit:$int<1>
+  // can point into  foreign( $void )
+  $out index:$int<6>
+  // can point into  foreign( $void )
+  not_found:$int<1>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %find_leftmost_bit_8
+  //  file prog.linked.opt.aa, line 49
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %find_leftmost_bit_8
+    //  file prog.linked.opt.aa, line 49
+    //  $volatile 	$call find_leftmost_bit_4 (num_h bit ) (index_h not_found_h ) 
+    //  file prog.linked.opt.aa, line 56
+    //  $volatile 	$call find_leftmost_bit_4 (num_l bit ) (index_l not_found_l ) 
+    //  file prog.linked.opt.aa, line 57
+    // 4 
+    $constant $W[konst_273_wire_constant] : $int<6> := _b000100// 4
+    // ( $mux not_found_h index_l  ind_h ) 
+    // 	$volatile num_h := ( $slice num 7 4 )  $buffering 1
+    //  file prog.linked.opt.aa, line 54
+    // num_h
+    $W[num_h_256] : $int<4>
+    // 	$volatile num_l := ( $slice num 3 0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 55
+    // num_l
+    $W[num_l_260] : $int<4>
+    //  $volatile 	$call find_leftmost_bit_4 (num_h bit ) (index_h not_found_h ) 
+    //  file prog.linked.opt.aa, line 56
+    // index_h
+    $W[index_h_265] : $int<6>
+    // not_found_h
+    $W[not_found_h_265] : $int<1>
+    //  $volatile 	$call find_leftmost_bit_4 (num_l bit ) (index_l not_found_l ) 
+    //  file prog.linked.opt.aa, line 57
+    // index_l
+    $W[index_l_270] : $int<6>
+    // not_found_l
+    $W[not_found_l_270] : $int<1>
+    // 	$volatile ind_h := (index_h + 4 ) $buffering 1
+    //  file prog.linked.opt.aa, line 58
+    // ind_h
+    $W[ind_h_275] : $int<6>
+    // 	not_found := (not_found_h & not_found_l) $buffering 1
+    //  file prog.linked.opt.aa, line 59
+    // not_found
+    // 	index := ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  ) $buffering 1
+    //  file prog.linked.opt.aa, line 60
+    // ( $mux not_found_h index_l  ind_h ) 
+    $intermediate $W[MUX_285_wire] : $int<6>
+    // index
+    // 	$volatile num_h := ( $slice num 7 4 )  $buffering 1
+    //  file prog.linked.opt.aa, line 54
+    // ( $slice num 7 4 ) 
+    [:] [slice_255_inst] (num 7 4) (num_h_256)  $flowthrough
+    $delay slice_255_inst 0
+    // 	$volatile num_l := ( $slice num 3 0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 55
+    // ( $slice num 3 0 ) 
+    [:] [slice_259_inst] (num 3 0) (num_l_260)  $flowthrough
+    $delay slice_259_inst 0
+    //  $volatile 	$call find_leftmost_bit_4 (num_h bit ) (index_h not_found_h ) 
+    //  file prog.linked.opt.aa, line 56
+    $call [call_stmt_265_call] $module find_leftmost_bit_4(num_h_256 bit) (index_h_265 not_found_h_265)   $flowthrough
+    //  $volatile 	$call find_leftmost_bit_4 (num_l bit ) (index_l not_found_l ) 
+    //  file prog.linked.opt.aa, line 57
+    $call [call_stmt_270_call] $module find_leftmost_bit_4(num_l_260 bit) (index_l_270 not_found_l_270)   $flowthrough
+    // 	$volatile ind_h := (index_h + 4 ) $buffering 1
+    //  file prog.linked.opt.aa, line 58
+    // (index_h + 4 )
+    +[ADD_u6_u6_274_inst] (index_h_265 konst_273_wire_constant) (ind_h_275)   $flowthrough 
+    $delay ADD_u6_u6_274_inst 0
+    // 	not_found := (not_found_h & not_found_l) $buffering 1
+    //  file prog.linked.opt.aa, line 59
+    // (not_found_h & not_found_l)
+    &[AND_u1_u1_279_inst] (not_found_h_265 not_found_l_270) (not_found)   
+    $buffering  $out AND_u1_u1_279_inst not_found 1
+    $delay AND_u1_u1_279_inst 1
+    // 	index := ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  ) $buffering 1
+    //  file prog.linked.opt.aa, line 60
+    // ( $mux not_found_h index_l  ind_h ) 
+    ? [MUX_285_inst] (not_found_h_265 index_l_270 ind_h_275) (MUX_285_wire)  $flowthrough
+    // ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  )
+    # := [type_cast_286_inst] (MUX_285_wire) (index)    
+    $buffering  $out type_cast_286_inst index 1
+    $delay type_cast_286_inst 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$volatile $module [find_leftmost_bit_16] 
+{
+  $in num:$int<16>
+  // can point into  foreign( $void )
+  bit:$int<1>
+  // can point into  foreign( $void )
+  $out index:$int<6>
+  // can point into  foreign( $void )
+  not_found:$int<1>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %find_leftmost_bit_16
+  //  file prog.linked.opt.aa, line 62
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %find_leftmost_bit_16
+    //  file prog.linked.opt.aa, line 62
+    //  $volatile 	$call find_leftmost_bit_8 (num_h (bit [] 0 ) ) (index_h not_found_h ) 
+    //  file prog.linked.opt.aa, line 69
+    // 0 
+    $constant $W[konst_304_wire_constant] : $int<1> := _b0// 0
+    //  $volatile 	$call find_leftmost_bit_8 (num_l (bit [] 0 ) ) (index_l not_found_l ) 
+    //  file prog.linked.opt.aa, line 70
+    // 0 
+    $constant $W[konst_311_wire_constant] : $int<1> := _b0// 0
+    // 8 
+    $constant $W[konst_318_wire_constant] : $int<6> := _b001000// 8
+    // ( $mux not_found_h index_l  ind_h ) 
+    // 	$volatile num_h := ( $slice num 15 8 )  $buffering 1
+    //  file prog.linked.opt.aa, line 67
+    // num_h
+    $W[num_h_297] : $int<8>
+    // 	$volatile num_l := ( $slice num 7 0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 68
+    // num_l
+    $W[num_l_301] : $int<8>
+    //  $volatile 	$call find_leftmost_bit_8 (num_h (bit [] 0 ) ) (index_h not_found_h ) 
+    //  file prog.linked.opt.aa, line 69
+    // (bit [] 0 )
+    $intermediate $W[BITSEL_u1_u1_305_wire] : $int<1>
+    // index_h
+    $W[index_h_308] : $int<6>
+    // not_found_h
+    $W[not_found_h_308] : $int<1>
+    //  $volatile 	$call find_leftmost_bit_8 (num_l (bit [] 0 ) ) (index_l not_found_l ) 
+    //  file prog.linked.opt.aa, line 70
+    // (bit [] 0 )
+    $intermediate $W[BITSEL_u1_u1_312_wire] : $int<1>
+    // index_l
+    $W[index_l_315] : $int<6>
+    // not_found_l
+    $W[not_found_l_315] : $int<1>
+    // 	$volatile ind_h := (index_h + 8 ) $buffering 1
+    //  file prog.linked.opt.aa, line 71
+    // ind_h
+    $W[ind_h_320] : $int<6>
+    // 	not_found := (not_found_h & not_found_l) $buffering 1
+    //  file prog.linked.opt.aa, line 72
+    // not_found
+    // 	index := ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  ) $buffering 1
+    //  file prog.linked.opt.aa, line 73
+    // ( $mux not_found_h index_l  ind_h ) 
+    $intermediate $W[MUX_330_wire] : $int<6>
+    // index
+    // 	$volatile num_h := ( $slice num 15 8 )  $buffering 1
+    //  file prog.linked.opt.aa, line 67
+    // ( $slice num 15 8 ) 
+    [:] [slice_296_inst] (num 15 8) (num_h_297)  $flowthrough
+    $delay slice_296_inst 0
+    // 	$volatile num_l := ( $slice num 7 0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 68
+    // ( $slice num 7 0 ) 
+    [:] [slice_300_inst] (num 7 0) (num_l_301)  $flowthrough
+    $delay slice_300_inst 0
+    //  $volatile 	$call find_leftmost_bit_8 (num_h (bit [] 0 ) ) (index_h not_found_h ) 
+    //  file prog.linked.opt.aa, line 69
+    // (bit [] 0 )
+    [][BITSEL_u1_u1_305_inst] (bit konst_304_wire_constant) (BITSEL_u1_u1_305_wire)   $flowthrough 
+    $delay BITSEL_u1_u1_305_inst 0
+    $call [call_stmt_308_call] $module find_leftmost_bit_8(num_h_297 BITSEL_u1_u1_305_wire) (index_h_308 not_found_h_308)   $flowthrough
+    //  $volatile 	$call find_leftmost_bit_8 (num_l (bit [] 0 ) ) (index_l not_found_l ) 
+    //  file prog.linked.opt.aa, line 70
+    // (bit [] 0 )
+    [][BITSEL_u1_u1_312_inst] (bit konst_311_wire_constant) (BITSEL_u1_u1_312_wire)   $flowthrough 
+    $delay BITSEL_u1_u1_312_inst 0
+    $call [call_stmt_315_call] $module find_leftmost_bit_8(num_l_301 BITSEL_u1_u1_312_wire) (index_l_315 not_found_l_315)   $flowthrough
+    // 	$volatile ind_h := (index_h + 8 ) $buffering 1
+    //  file prog.linked.opt.aa, line 71
+    // (index_h + 8 )
+    +[ADD_u6_u6_319_inst] (index_h_308 konst_318_wire_constant) (ind_h_320)   $flowthrough 
+    $delay ADD_u6_u6_319_inst 0
+    // 	not_found := (not_found_h & not_found_l) $buffering 1
+    //  file prog.linked.opt.aa, line 72
+    // (not_found_h & not_found_l)
+    &[AND_u1_u1_324_inst] (not_found_h_308 not_found_l_315) (not_found)   
+    $buffering  $out AND_u1_u1_324_inst not_found 1
+    $delay AND_u1_u1_324_inst 1
+    // 	index := ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  ) $buffering 1
+    //  file prog.linked.opt.aa, line 73
+    // ( $mux not_found_h index_l  ind_h ) 
+    ? [MUX_330_inst] (not_found_h_308 index_l_315 ind_h_320) (MUX_330_wire)  $flowthrough
+    // ($bitcast ($uint<6>) ( $mux not_found_h index_l  ind_h )  )
+    # := [type_cast_331_inst] (MUX_330_wire) (index)    
+    $buffering  $out type_cast_331_inst index 1
+    $delay type_cast_331_inst 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$volatile $module [sll_16] 
+{
+  $in num:$int<16>
+  // can point into 
+  shift:$int<4>
+  // can point into  foreign( $void )
+  $out shifted:$int<16>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %sll_16
+  //  file prog.linked.opt.aa, line 75
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %sll_16
+    //  file prog.linked.opt.aa, line 75
+    // ( $mux (shift [] 0 ) (( $slice num 14 0 )  && ($bitcast ($uint<1>) _b0  ))  num ) 
+    // 0 
+    $constant $W[konst_340_wire_constant] : $int<4> := _b0000// 0
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_346_wire_constant] : $int<1> := _b0// 0
+    // ( $mux (shift [] 1 ) (( $slice X0 13 0 )  && ($bitcast ($uint<2>) _b0  ))  X0 ) 
+    // 1 
+    $constant $W[konst_353_wire_constant] : $int<4> := _b0001// 1
+    // ($bitcast ($uint<2>) _b0  )
+    $constant $W[type_cast_358_wire_constant] : $int<2> := _b00// 0
+    // ( $mux (shift [] 2 ) (( $slice X1 11 0 )  && ($bitcast ($uint<4>) _b0  ))  X1 ) 
+    // 2 
+    $constant $W[konst_365_wire_constant] : $int<4> := _b0010// 2
+    // ($bitcast ($uint<4>) _b0  )
+    $constant $W[type_cast_371_wire_constant] : $int<4> := _b0000// 0
+    // ( $mux (shift [] 3 ) (( $slice X2 7 0 )  && ($bitcast ($uint<8>) _b0  ))  X2 ) 
+    // 3 
+    $constant $W[konst_378_wire_constant] : $int<4> := _b0011// 3
+    // ($bitcast ($uint<8>) _b0  )
+    $constant $W[type_cast_383_wire_constant] : $int<8> := _b00000000// 0
+    // 	X0 := ( $mux (shift [] 0 ) (( $slice num 14 0 )  && ($bitcast ($uint<1>) _b0  ))  num )  $buffering 1
+    //  file prog.linked.opt.aa, line 80
+    // (shift [] 0 )
+    $intermediate $W[BITSEL_u4_u1_341_wire] : $int<1>
+    // ( $slice num 14 0 ) 
+    $intermediate $W[slice_344_wire] : $int<15>
+    // (( $slice num 14 0 )  && ($bitcast ($uint<1>) _b0  ))
+    $intermediate $W[CONCAT_u15_u16_347_wire] : $int<16>
+    // X0
+    $W[X0_350] : $int<16>
+    // 	X1 := ( $mux (shift [] 1 ) (( $slice X0 13 0 )  && ($bitcast ($uint<2>) _b0  ))  X0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 81
+    // (shift [] 1 )
+    $intermediate $W[BITSEL_u4_u1_354_wire] : $int<1>
+    // ( $slice X0 13 0 ) 
+    $intermediate $W[slice_356_wire] : $int<14>
+    // (( $slice X0 13 0 )  && ($bitcast ($uint<2>) _b0  ))
+    $intermediate $W[CONCAT_u14_u16_359_wire] : $int<16>
+    // X1
+    $W[X1_362] : $int<16>
+    // 	X2 := ( $mux (shift [] 2 ) (( $slice X1 11 0 )  && ($bitcast ($uint<4>) _b0  ))  X1 )  $buffering 1
+    //  file prog.linked.opt.aa, line 82
+    // (shift [] 2 )
+    $intermediate $W[BITSEL_u4_u1_366_wire] : $int<1>
+    // ( $slice X1 11 0 ) 
+    $intermediate $W[slice_369_wire] : $int<12>
+    // (( $slice X1 11 0 )  && ($bitcast ($uint<4>) _b0  ))
+    $intermediate $W[CONCAT_u12_u16_372_wire] : $int<16>
+    // X2
+    $W[X2_375] : $int<16>
+    // 	shifted := ( $mux (shift [] 3 ) (( $slice X2 7 0 )  && ($bitcast ($uint<8>) _b0  ))  X2 )  $buffering 1
+    //  file prog.linked.opt.aa, line 83
+    // (shift [] 3 )
+    $intermediate $W[BITSEL_u4_u1_379_wire] : $int<1>
+    // ( $slice X2 7 0 ) 
+    $intermediate $W[slice_381_wire] : $int<8>
+    // (( $slice X2 7 0 )  && ($bitcast ($uint<8>) _b0  ))
+    $intermediate $W[CONCAT_u8_u16_384_wire] : $int<16>
+    // shifted
+    // 	X0 := ( $mux (shift [] 0 ) (( $slice num 14 0 )  && ($bitcast ($uint<1>) _b0  ))  num )  $buffering 1
+    //  file prog.linked.opt.aa, line 80
+    // (shift [] 0 )
+    [][BITSEL_u4_u1_341_inst] (shift konst_340_wire_constant) (BITSEL_u4_u1_341_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_341_inst 0
+    // ( $slice num 14 0 ) 
+    [:] [slice_344_inst] (num 14 0) (slice_344_wire)  $flowthrough
+    $delay slice_344_inst 0
+    // (( $slice num 14 0 )  && ($bitcast ($uint<1>) _b0  ))
+    &&[CONCAT_u15_u16_347_inst] (slice_344_wire type_cast_346_wire_constant) (CONCAT_u15_u16_347_wire)   $flowthrough 
+    $delay CONCAT_u15_u16_347_inst 0
+    // ( $mux (shift [] 0 ) (( $slice num 14 0 )  && ($bitcast ($uint<1>) _b0  ))  num ) 
+    ? [MUX_349_inst] (BITSEL_u4_u1_341_wire CONCAT_u15_u16_347_wire num) (X0_350) 
+    $buffering  $out MUX_349_inst X0_350 1
+    // 	X1 := ( $mux (shift [] 1 ) (( $slice X0 13 0 )  && ($bitcast ($uint<2>) _b0  ))  X0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 81
+    // (shift [] 1 )
+    [][BITSEL_u4_u1_354_inst] (shift konst_353_wire_constant) (BITSEL_u4_u1_354_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_354_inst 0
+    // ( $slice X0 13 0 ) 
+    [:] [slice_356_inst] (X0_350 13 0) (slice_356_wire)  $flowthrough
+    $delay slice_356_inst 0
+    // (( $slice X0 13 0 )  && ($bitcast ($uint<2>) _b0  ))
+    &&[CONCAT_u14_u16_359_inst] (slice_356_wire type_cast_358_wire_constant) (CONCAT_u14_u16_359_wire)   $flowthrough 
+    $delay CONCAT_u14_u16_359_inst 0
+    // ( $mux (shift [] 1 ) (( $slice X0 13 0 )  && ($bitcast ($uint<2>) _b0  ))  X0 ) 
+    ? [MUX_361_inst] (BITSEL_u4_u1_354_wire CONCAT_u14_u16_359_wire X0_350) (X1_362) 
+    $buffering  $out MUX_361_inst X1_362 1
+    // 	X2 := ( $mux (shift [] 2 ) (( $slice X1 11 0 )  && ($bitcast ($uint<4>) _b0  ))  X1 )  $buffering 1
+    //  file prog.linked.opt.aa, line 82
+    // (shift [] 2 )
+    [][BITSEL_u4_u1_366_inst] (shift konst_365_wire_constant) (BITSEL_u4_u1_366_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_366_inst 0
+    // ( $slice X1 11 0 ) 
+    [:] [slice_369_inst] (X1_362 11 0) (slice_369_wire)  $flowthrough
+    $delay slice_369_inst 0
+    // (( $slice X1 11 0 )  && ($bitcast ($uint<4>) _b0  ))
+    &&[CONCAT_u12_u16_372_inst] (slice_369_wire type_cast_371_wire_constant) (CONCAT_u12_u16_372_wire)   $flowthrough 
+    $delay CONCAT_u12_u16_372_inst 0
+    // ( $mux (shift [] 2 ) (( $slice X1 11 0 )  && ($bitcast ($uint<4>) _b0  ))  X1 ) 
+    ? [MUX_374_inst] (BITSEL_u4_u1_366_wire CONCAT_u12_u16_372_wire X1_362) (X2_375) 
+    $buffering  $out MUX_374_inst X2_375 1
+    // 	shifted := ( $mux (shift [] 3 ) (( $slice X2 7 0 )  && ($bitcast ($uint<8>) _b0  ))  X2 )  $buffering 1
+    //  file prog.linked.opt.aa, line 83
+    // (shift [] 3 )
+    [][BITSEL_u4_u1_379_inst] (shift konst_378_wire_constant) (BITSEL_u4_u1_379_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_379_inst 0
+    // ( $slice X2 7 0 ) 
+    [:] [slice_381_inst] (X2_375 7 0) (slice_381_wire)  $flowthrough
+    $delay slice_381_inst 0
+    // (( $slice X2 7 0 )  && ($bitcast ($uint<8>) _b0  ))
+    &&[CONCAT_u8_u16_384_inst] (slice_381_wire type_cast_383_wire_constant) (CONCAT_u8_u16_384_wire)   $flowthrough 
+    $delay CONCAT_u8_u16_384_inst 0
+    // ( $mux (shift [] 3 ) (( $slice X2 7 0 )  && ($bitcast ($uint<8>) _b0  ))  X2 ) 
+    ? [MUX_386_inst] (BITSEL_u4_u1_379_wire CONCAT_u8_u16_384_wire X2_375) (shifted) 
+    $buffering  $out MUX_386_inst shifted 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$volatile $module [make_exponent] 
+{
+  $in num:$int<6>
+  // can point into  foreign( $void )
+  $out reg_exp:$int<16>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %make_exponent
+  //  file prog.linked.opt.aa, line 85
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %make_exponent
+    //  file prog.linked.opt.aa, line 85
+    // 1 
+    $constant $W[konst_394_wire_constant] : $int<6> := _b000001// 1
+    // 0 
+    $constant $W[konst_396_wire_constant] : $int<6> := _b000000// 0
+    // 27 
+    $constant $W[konst_401_wire_constant] : $int<6> := _b011011// 27
+    // ( $mux reg_type (num - 28 )  (28  - num) ) 
+    // 28 
+    $constant $W[konst_412_wire_constant] : $int<6> := _b011100// 28
+    // 28 
+    $constant $W[konst_414_wire_constant] : $int<6> := _b011100// 28
+    // 1 
+    $constant $W[konst_418_wire_constant] : $int<6> := _b000001// 1
+    // ( $mux x 1   0  ) 
+    // 1 
+    $constant $W[konst_421_wire_constant] : $int<6> := _b000001// 1
+    // 0 
+    $constant $W[konst_422_wire_constant] : $int<6> := _b000000// 0
+    //  $volatile 	$call shift_toMake_regime (($bitcast ($uint<4>) (reg_cnt - 1 ) ) reg_type ) (regime ) 
+    //  file prog.linked.opt.aa, line 94
+    // 1 
+    $constant $W[konst_427_wire_constant] : $int<6> := _b000001// 1
+    // ( $mux reg_type (regime | (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )))  regime ) 
+    // (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  ))
+    $constant $W[CONCAT_u1_u16_440_wire_constant] : $int<16> := _b1000000000000000// 32768
+    //  $volatile 	$call find_leftmost_bit_16 (temp ( ~ reg_type ) ) (r_dash_index not_found ) 
+    //  file prog.linked.opt.aa, line 96
+    //  $volatile 	$call sll_16 (($bitcast ($uint<16>) _b1  ) ($bitcast ($uint<4>) (r_dash_index - 1 ) ) ) (shifted_1_exponent ) 
+    //  file prog.linked.opt.aa, line 97
+    // ($bitcast ($uint<16>) _b1  )
+    $constant $W[type_cast_452_wire_constant] : $int<16> := _b0000000000000001// 1
+    // 1 
+    $constant $W[konst_454_wire_constant] : $int<6> := _b000001// 1
+    // 14 
+    $constant $W[konst_461_wire_constant] : $int<6> := _b001110// 14
+    // ( $mux (odd & is_there_exp) shifted_1_exponent  ($bitcast ($uint<16>) _b0  ) ) 
+    // ($bitcast ($uint<16>) _b0  )
+    $constant $W[type_cast_471_wire_constant] : $int<16> := _b0000000000000000// 0
+    // 	$volatile odd := ((num & 1 ) > 0 ) $buffering 1
+    //  file prog.linked.opt.aa, line 90
+    // (num & 1 )
+    $intermediate $W[AND_u6_u6_395_wire] : $int<6>
+    // odd
+    $W[odd_398] : $int<1>
+    // 	$volatile reg_type := (num > 27 ) $buffering 1
+    //  file prog.linked.opt.aa, line 91
+    // reg_type
+    $W[reg_type_403] : $int<1>
+    // 	x := (reg_type | odd) $buffering 1
+    //  file prog.linked.opt.aa, line 92
+    // x
+    $W[x_408] : $int<1>
+    // 	$volatile reg_cnt := ((( $mux reg_type (num - 28 )  (28  - num) )  >> 1 ) + ( $mux x 1   0  ) ) $buffering 1
+    //  file prog.linked.opt.aa, line 93
+    // (num - 28 )
+    $intermediate $W[SUB_u6_u6_413_wire] : $int<6>
+    // (28  - num)
+    $intermediate $W[SUB_u6_u6_416_wire] : $int<6>
+    // ( $mux reg_type (num - 28 )  (28  - num) ) 
+    $intermediate $W[MUX_417_wire] : $int<6>
+    // (( $mux reg_type (num - 28 )  (28  - num) )  >> 1 )
+    $intermediate $W[LSHR_u6_u6_419_wire] : $int<6>
+    // ( $mux x 1   0  ) 
+    $intermediate $W[MUX_423_wire] : $int<6>
+    // reg_cnt
+    $W[reg_cnt_425] : $int<6>
+    //  $volatile 	$call shift_toMake_regime (($bitcast ($uint<4>) (reg_cnt - 1 ) ) reg_type ) (regime ) 
+    //  file prog.linked.opt.aa, line 94
+    // (reg_cnt - 1 )
+    $intermediate $W[SUB_u6_u6_428_wire] : $int<6>
+    // ($bitcast ($uint<4>) (reg_cnt - 1 ) )
+    $intermediate $W[type_cast_429_wire] : $int<4>
+    // regime
+    $W[regime_432] : $int<16>
+    // 	$volatile temp := ( $mux reg_type (regime | (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )))  regime )  $buffering 1
+    //  file prog.linked.opt.aa, line 95
+    // (regime | (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )))
+    $intermediate $W[OR_u16_u16_441_wire] : $int<16>
+    // temp
+    $W[temp_444] : $int<16>
+    //  $volatile 	$call find_leftmost_bit_16 (temp ( ~ reg_type ) ) (r_dash_index not_found ) 
+    //  file prog.linked.opt.aa, line 96
+    // ( ~ reg_type )
+    $intermediate $W[NOT_u1_u1_447_wire] : $int<1>
+    // r_dash_index
+    $W[r_dash_index_450] : $int<6>
+    // not_found
+    $W[not_found_450] : $int<1>
+    //  $volatile 	$call sll_16 (($bitcast ($uint<16>) _b1  ) ($bitcast ($uint<4>) (r_dash_index - 1 ) ) ) (shifted_1_exponent ) 
+    //  file prog.linked.opt.aa, line 97
+    // (r_dash_index - 1 )
+    $intermediate $W[SUB_u6_u6_455_wire] : $int<6>
+    // ($bitcast ($uint<4>) (r_dash_index - 1 ) )
+    $intermediate $W[type_cast_456_wire] : $int<4>
+    // shifted_1_exponent
+    $W[shifted_1_exponent_458] : $int<16>
+    // 	$volatile is_there_exp := (reg_cnt < 14 ) $buffering 1
+    //  file prog.linked.opt.aa, line 98
+    // is_there_exp
+    $W[is_there_exp_463] : $int<1>
+    // 	reg_exp := (regime | ( $mux (odd & is_there_exp) shifted_1_exponent  ($bitcast ($uint<16>) _b0  ) ) ) $buffering 1
+    //  file prog.linked.opt.aa, line 99
+    // (odd & is_there_exp)
+    $intermediate $W[AND_u1_u1_468_wire] : $int<1>
+    // ( $mux (odd & is_there_exp) shifted_1_exponent  ($bitcast ($uint<16>) _b0  ) ) 
+    $intermediate $W[MUX_472_wire] : $int<16>
+    // reg_exp
+    // 	$volatile odd := ((num & 1 ) > 0 ) $buffering 1
+    //  file prog.linked.opt.aa, line 90
+    // (num & 1 )
+    &[AND_u6_u6_395_inst] (num konst_394_wire_constant) (AND_u6_u6_395_wire)   $flowthrough 
+    $delay AND_u6_u6_395_inst 0
+    // ((num & 1 ) > 0 )
+    >[UGT_u6_u1_397_inst] (AND_u6_u6_395_wire konst_396_wire_constant) (odd_398)   $flowthrough 
+    $delay UGT_u6_u1_397_inst 0
+    // 	$volatile reg_type := (num > 27 ) $buffering 1
+    //  file prog.linked.opt.aa, line 91
+    // (num > 27 )
+    >[UGT_u6_u1_402_inst] (num konst_401_wire_constant) (reg_type_403)   $flowthrough 
+    $delay UGT_u6_u1_402_inst 0
+    // 	x := (reg_type | odd) $buffering 1
+    //  file prog.linked.opt.aa, line 92
+    // (reg_type | odd)
+    |[OR_u1_u1_407_inst] (reg_type_403 odd_398) (x_408)   
+    $buffering  $out OR_u1_u1_407_inst x_408 1
+    $delay OR_u1_u1_407_inst 1
+    // 	$volatile reg_cnt := ((( $mux reg_type (num - 28 )  (28  - num) )  >> 1 ) + ( $mux x 1   0  ) ) $buffering 1
+    //  file prog.linked.opt.aa, line 93
+    // (num - 28 )
+    -[SUB_u6_u6_413_inst] (num konst_412_wire_constant) (SUB_u6_u6_413_wire)   $flowthrough 
+    $delay SUB_u6_u6_413_inst 0
+    // (28  - num)
+    -[SUB_u6_u6_416_inst] (konst_414_wire_constant num) (SUB_u6_u6_416_wire)   $flowthrough 
+    $delay SUB_u6_u6_416_inst 0
+    // ( $mux reg_type (num - 28 )  (28  - num) ) 
+    ? [MUX_417_inst] (reg_type_403 SUB_u6_u6_413_wire SUB_u6_u6_416_wire) (MUX_417_wire)  $flowthrough
+    // (( $mux reg_type (num - 28 )  (28  - num) )  >> 1 )
+    >>[LSHR_u6_u6_419_inst] (MUX_417_wire konst_418_wire_constant) (LSHR_u6_u6_419_wire)   $flowthrough 
+    $delay LSHR_u6_u6_419_inst 0
+    // ( $mux x 1   0  ) 
+    ? [MUX_423_inst] (x_408 konst_421_wire_constant konst_422_wire_constant) (MUX_423_wire)  $flowthrough
+    // ((( $mux reg_type (num - 28 )  (28  - num) )  >> 1 ) + ( $mux x 1   0  ) )
+    +[ADD_u6_u6_424_inst] (LSHR_u6_u6_419_wire MUX_423_wire) (reg_cnt_425)   $flowthrough 
+    $delay ADD_u6_u6_424_inst 0
+    //  $volatile 	$call shift_toMake_regime (($bitcast ($uint<4>) (reg_cnt - 1 ) ) reg_type ) (regime ) 
+    //  file prog.linked.opt.aa, line 94
+    // (reg_cnt - 1 )
+    -[SUB_u6_u6_428_inst] (reg_cnt_425 konst_427_wire_constant) (SUB_u6_u6_428_wire)   $flowthrough 
+    $delay SUB_u6_u6_428_inst 0
+    // ($bitcast ($uint<4>) (reg_cnt - 1 ) )
+    # := [type_cast_429_inst] (SUB_u6_u6_428_wire) (type_cast_429_wire)   $flowthrough
+    $delay type_cast_429_inst 0
+    $call [call_stmt_432_call] $module shift_toMake_regime(type_cast_429_wire reg_type_403) (regime_432)   $flowthrough
+    // 	$volatile temp := ( $mux reg_type (regime | (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )))  regime )  $buffering 1
+    //  file prog.linked.opt.aa, line 95
+    // (regime | (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )))
+    |[OR_u16_u16_441_inst] (regime_432 CONCAT_u1_u16_440_wire_constant) (OR_u16_u16_441_wire)   $flowthrough 
+    $delay OR_u16_u16_441_inst 0
+    // ( $mux reg_type (regime | (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )))  regime ) 
+    ? [MUX_443_inst] (reg_type_403 OR_u16_u16_441_wire regime_432) (temp_444)  $flowthrough
+    //  $volatile 	$call find_leftmost_bit_16 (temp ( ~ reg_type ) ) (r_dash_index not_found ) 
+    //  file prog.linked.opt.aa, line 96
+    // ( ~ reg_type )
+    ~ [NOT_u1_u1_447_inst] (reg_type_403) (NOT_u1_u1_447_wire)   $flowthrough
+    $delay NOT_u1_u1_447_inst 0
+    $call [call_stmt_450_call] $module find_leftmost_bit_16(temp_444 NOT_u1_u1_447_wire) (r_dash_index_450 not_found_450)   $flowthrough
+    //  $volatile 	$call sll_16 (($bitcast ($uint<16>) _b1  ) ($bitcast ($uint<4>) (r_dash_index - 1 ) ) ) (shifted_1_exponent ) 
+    //  file prog.linked.opt.aa, line 97
+    // (r_dash_index - 1 )
+    -[SUB_u6_u6_455_inst] (r_dash_index_450 konst_454_wire_constant) (SUB_u6_u6_455_wire)   $flowthrough 
+    $delay SUB_u6_u6_455_inst 0
+    // ($bitcast ($uint<4>) (r_dash_index - 1 ) )
+    # := [type_cast_456_inst] (SUB_u6_u6_455_wire) (type_cast_456_wire)   $flowthrough
+    $delay type_cast_456_inst 0
+    $call [call_stmt_458_call] $module sll_16(type_cast_452_wire_constant type_cast_456_wire) (shifted_1_exponent_458)   $flowthrough
+    // 	$volatile is_there_exp := (reg_cnt < 14 ) $buffering 1
+    //  file prog.linked.opt.aa, line 98
+    // (reg_cnt < 14 )
+    <[ULT_u6_u1_462_inst] (reg_cnt_425 konst_461_wire_constant) (is_there_exp_463)   $flowthrough 
+    $delay ULT_u6_u1_462_inst 0
+    // 	reg_exp := (regime | ( $mux (odd & is_there_exp) shifted_1_exponent  ($bitcast ($uint<16>) _b0  ) ) ) $buffering 1
+    //  file prog.linked.opt.aa, line 99
+    // (odd & is_there_exp)
+    &[AND_u1_u1_468_inst] (odd_398 is_there_exp_463) (AND_u1_u1_468_wire)   $flowthrough 
+    $delay AND_u1_u1_468_inst 0
+    // ( $mux (odd & is_there_exp) shifted_1_exponent  ($bitcast ($uint<16>) _b0  ) ) 
+    ? [MUX_472_inst] (AND_u1_u1_468_wire shifted_1_exponent_458 type_cast_471_wire_constant) (MUX_472_wire)  $flowthrough
+    // (regime | ( $mux (odd & is_there_exp) shifted_1_exponent  ($bitcast ($uint<16>) _b0  ) ) )
+    |[OR_u16_u16_473_inst] (regime_432 MUX_472_wire) (reg_exp)   
+    $buffering  $out OR_u16_u16_473_inst reg_exp 1
+    $delay OR_u16_u16_473_inst 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$volatile $module [shift_toMake_fraction] 
+{
+  $in num:$int<17>
+  // can point into  foreign( $void )
+  shift:$int<4>
+  // can point into  foreign( $void )
+  $out fraction:$int<17>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %shift_toMake_fraction
+  //  file prog.linked.opt.aa, line 101
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %shift_toMake_fraction
+    //  file prog.linked.opt.aa, line 101
+    // ( $mux (shift [] 0 ) (num >> 1 )  num ) 
+    // 0 
+    $constant $W[konst_483_wire_constant] : $int<4> := _b0000// 0
+    // 1 
+    $constant $W[konst_486_wire_constant] : $int<17> := _b00000000000000001// 1
+    // ( $mux (shift [] 1 ) (X0 >> 2 )  X0 ) 
+    // 1 
+    $constant $W[konst_493_wire_constant] : $int<4> := _b0001// 1
+    // 2 
+    $constant $W[konst_496_wire_constant] : $int<17> := _b00000000000000010// 2
+    // ( $mux (shift [] 2 ) (X1 >> 4 )  X1 ) 
+    // 2 
+    $constant $W[konst_503_wire_constant] : $int<4> := _b0010// 2
+    // 4 
+    $constant $W[konst_506_wire_constant] : $int<17> := _b00000000000000100// 4
+    // ( $mux (shift [] 3 ) (X2 >> 8 )  X2 ) 
+    // 3 
+    $constant $W[konst_513_wire_constant] : $int<4> := _b0011// 3
+    // 8 
+    $constant $W[konst_516_wire_constant] : $int<17> := _b00000000000001000// 8
+    // 	X0 := ( $mux (shift [] 0 ) (num >> 1 )  num )  $buffering 1
+    //  file prog.linked.opt.aa, line 106
+    // (shift [] 0 )
+    $intermediate $W[BITSEL_u4_u1_484_wire] : $int<1>
+    // (num >> 1 )
+    $intermediate $W[LSHR_u17_u17_487_wire] : $int<17>
+    // X0
+    $W[X0_490] : $int<17>
+    // 	X1 := ( $mux (shift [] 1 ) (X0 >> 2 )  X0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 107
+    // (shift [] 1 )
+    $intermediate $W[BITSEL_u4_u1_494_wire] : $int<1>
+    // (X0 >> 2 )
+    $intermediate $W[LSHR_u17_u17_497_wire] : $int<17>
+    // X1
+    $W[X1_500] : $int<17>
+    // 	X2 := ( $mux (shift [] 2 ) (X1 >> 4 )  X1 )  $buffering 1
+    //  file prog.linked.opt.aa, line 108
+    // (shift [] 2 )
+    $intermediate $W[BITSEL_u4_u1_504_wire] : $int<1>
+    // (X1 >> 4 )
+    $intermediate $W[LSHR_u17_u17_507_wire] : $int<17>
+    // X2
+    $W[X2_510] : $int<17>
+    // 	fraction := ( $mux (shift [] 3 ) (X2 >> 8 )  X2 )  $buffering 1
+    //  file prog.linked.opt.aa, line 109
+    // (shift [] 3 )
+    $intermediate $W[BITSEL_u4_u1_514_wire] : $int<1>
+    // (X2 >> 8 )
+    $intermediate $W[LSHR_u17_u17_517_wire] : $int<17>
+    // fraction
+    // 	X0 := ( $mux (shift [] 0 ) (num >> 1 )  num )  $buffering 1
+    //  file prog.linked.opt.aa, line 106
+    // (shift [] 0 )
+    [][BITSEL_u4_u1_484_inst] (shift konst_483_wire_constant) (BITSEL_u4_u1_484_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_484_inst 0
+    // (num >> 1 )
+    >>[LSHR_u17_u17_487_inst] (num konst_486_wire_constant) (LSHR_u17_u17_487_wire)   $flowthrough 
+    $delay LSHR_u17_u17_487_inst 0
+    // ( $mux (shift [] 0 ) (num >> 1 )  num ) 
+    ? [MUX_489_inst] (BITSEL_u4_u1_484_wire LSHR_u17_u17_487_wire num) (X0_490) 
+    $buffering  $out MUX_489_inst X0_490 1
+    // 	X1 := ( $mux (shift [] 1 ) (X0 >> 2 )  X0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 107
+    // (shift [] 1 )
+    [][BITSEL_u4_u1_494_inst] (shift konst_493_wire_constant) (BITSEL_u4_u1_494_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_494_inst 0
+    // (X0 >> 2 )
+    >>[LSHR_u17_u17_497_inst] (X0_490 konst_496_wire_constant) (LSHR_u17_u17_497_wire)   $flowthrough 
+    $delay LSHR_u17_u17_497_inst 0
+    // ( $mux (shift [] 1 ) (X0 >> 2 )  X0 ) 
+    ? [MUX_499_inst] (BITSEL_u4_u1_494_wire LSHR_u17_u17_497_wire X0_490) (X1_500) 
+    $buffering  $out MUX_499_inst X1_500 1
+    // 	X2 := ( $mux (shift [] 2 ) (X1 >> 4 )  X1 )  $buffering 1
+    //  file prog.linked.opt.aa, line 108
+    // (shift [] 2 )
+    [][BITSEL_u4_u1_504_inst] (shift konst_503_wire_constant) (BITSEL_u4_u1_504_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_504_inst 0
+    // (X1 >> 4 )
+    >>[LSHR_u17_u17_507_inst] (X1_500 konst_506_wire_constant) (LSHR_u17_u17_507_wire)   $flowthrough 
+    $delay LSHR_u17_u17_507_inst 0
+    // ( $mux (shift [] 2 ) (X1 >> 4 )  X1 ) 
+    ? [MUX_509_inst] (BITSEL_u4_u1_504_wire LSHR_u17_u17_507_wire X1_500) (X2_510) 
+    $buffering  $out MUX_509_inst X2_510 1
+    // 	fraction := ( $mux (shift [] 3 ) (X2 >> 8 )  X2 )  $buffering 1
+    //  file prog.linked.opt.aa, line 109
+    // (shift [] 3 )
+    [][BITSEL_u4_u1_514_inst] (shift konst_513_wire_constant) (BITSEL_u4_u1_514_wire)   $flowthrough 
+    $delay BITSEL_u4_u1_514_inst 0
+    // (X2 >> 8 )
+    >>[LSHR_u17_u17_517_inst] (X2_510 konst_516_wire_constant) (LSHR_u17_u17_517_wire)   $flowthrough 
+    $delay LSHR_u17_u17_517_inst 0
+    // ( $mux (shift [] 3 ) (X2 >> 8 )  X2 ) 
+    ? [MUX_519_inst] (BITSEL_u4_u1_514_wire LSHR_u17_u17_517_wire X2_510) (fraction) 
+    $buffering  $out MUX_519_inst fraction 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$volatile $module [make_fraction] 
+{
+  $in num:$int<6>
+  // can point into  foreign( $void )
+  frac:$int<12>
+  // can point into  foreign( $void )
+  $out fraction:$int<16>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %make_fraction
+  //  file prog.linked.opt.aa, line 111
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %make_fraction
+    //  file prog.linked.opt.aa, line 111
+    // 1 
+    $constant $W[konst_528_wire_constant] : $int<6> := _b000001// 1
+    // 0 
+    $constant $W[konst_530_wire_constant] : $int<6> := _b000000// 0
+    // 27 
+    $constant $W[konst_535_wire_constant] : $int<6> := _b011011// 27
+    // ( $mux reg_type (num - 28 )  (28  - num) ) 
+    // 28 
+    $constant $W[konst_546_wire_constant] : $int<6> := _b011100// 28
+    // 28 
+    $constant $W[konst_548_wire_constant] : $int<6> := _b011100// 28
+    // 1 
+    $constant $W[konst_552_wire_constant] : $int<6> := _b000001// 1
+    // ( $mux x 1   0  ) 
+    // 1 
+    $constant $W[konst_555_wire_constant] : $int<6> := _b000001// 1
+    // 0 
+    $constant $W[konst_556_wire_constant] : $int<6> := _b000000// 0
+    //  $volatile 	$call shift_toMake_fraction ((frac && ($bitcast ($uint<5>) _b0  )) ($bitcast ($uint<4>) (reg_cnt + 3 ) ) ) (fraction_1 ) 
+    //  file prog.linked.opt.aa, line 120
+    // ($bitcast ($uint<5>) _b0  )
+    $constant $W[type_cast_563_wire_constant] : $int<5> := _b00000// 0
+    // 3 
+    $constant $W[konst_566_wire_constant] : $int<6> := _b000011// 3
+    // 13 
+    $constant $W[konst_573_wire_constant] : $int<6> := _b001101// 13
+    // ( $mux is_there_frac ( $mux (fraction_1 [] 0 ) (fraction_2 + 1 )  fraction_2 )   ($bitcast ($uint<16>) _b0  ) ) 
+    // ( $mux (fraction_1 [] 0 ) (fraction_2 + 1 )  fraction_2 ) 
+    // 0 
+    $constant $W[konst_583_wire_constant] : $int<17> := _b00000000000000000// 0
+    // 1 
+    $constant $W[konst_586_wire_constant] : $int<16> := _b0000000000000001// 1
+    // ($bitcast ($uint<16>) _b0  )
+    $constant $W[type_cast_591_wire_constant] : $int<16> := _b0000000000000000// 0
+    // 	$volatile odd := ((num & 1 ) > 0 ) $buffering 1
+    //  file prog.linked.opt.aa, line 116
+    // (num & 1 )
+    $intermediate $W[AND_u6_u6_529_wire] : $int<6>
+    // odd
+    $W[odd_532] : $int<1>
+    // 	$volatile reg_type := (num > 27 ) $buffering 1
+    //  file prog.linked.opt.aa, line 117
+    // reg_type
+    $W[reg_type_537] : $int<1>
+    // 	x := (reg_type | odd) $buffering 1
+    //  file prog.linked.opt.aa, line 118
+    // x
+    $W[x_542] : $int<1>
+    // 	$volatile reg_cnt := ((( $mux reg_type (num - 28 )  (28  - num) )  >> 1 ) + ( $mux x 1   0  ) ) $buffering 1
+    //  file prog.linked.opt.aa, line 119
+    // (num - 28 )
+    $intermediate $W[SUB_u6_u6_547_wire] : $int<6>
+    // (28  - num)
+    $intermediate $W[SUB_u6_u6_550_wire] : $int<6>
+    // ( $mux reg_type (num - 28 )  (28  - num) ) 
+    $intermediate $W[MUX_551_wire] : $int<6>
+    // (( $mux reg_type (num - 28 )  (28  - num) )  >> 1 )
+    $intermediate $W[LSHR_u6_u6_553_wire] : $int<6>
+    // ( $mux x 1   0  ) 
+    $intermediate $W[MUX_557_wire] : $int<6>
+    // reg_cnt
+    $W[reg_cnt_559] : $int<6>
+    //  $volatile 	$call shift_toMake_fraction ((frac && ($bitcast ($uint<5>) _b0  )) ($bitcast ($uint<4>) (reg_cnt + 3 ) ) ) (fraction_1 ) 
+    //  file prog.linked.opt.aa, line 120
+    // (frac && ($bitcast ($uint<5>) _b0  ))
+    $intermediate $W[CONCAT_u12_u17_564_wire] : $int<17>
+    // (reg_cnt + 3 )
+    $intermediate $W[ADD_u6_u6_567_wire] : $int<6>
+    // ($bitcast ($uint<4>) (reg_cnt + 3 ) )
+    $intermediate $W[type_cast_568_wire] : $int<4>
+    // fraction_1
+    $W[fraction_1_570] : $int<17>
+    // 	$volatile is_there_frac := (reg_cnt < 13 ) $buffering 1
+    //  file prog.linked.opt.aa, line 121
+    // is_there_frac
+    $W[is_there_frac_575] : $int<1>
+    // 	$volatile fraction_2 := ( $slice fraction_1 16 1 )  $buffering 1
+    //  file prog.linked.opt.aa, line 122
+    // fraction_2
+    $W[fraction_2_579] : $int<16>
+    // 	fraction := ( $mux is_there_frac ( $mux (fraction_1 [] 0 ) (fraction_2 + 1 )  fraction_2 )   ($bitcast ($uint<16>) _b0  ) )  $buffering 1
+    //  file prog.linked.opt.aa, line 123
+    // (fraction_1 [] 0 )
+    $intermediate $W[BITSEL_u17_u1_584_wire] : $int<1>
+    // (fraction_2 + 1 )
+    $intermediate $W[ADD_u16_u16_587_wire] : $int<16>
+    // ( $mux (fraction_1 [] 0 ) (fraction_2 + 1 )  fraction_2 ) 
+    $intermediate $W[MUX_589_wire] : $int<16>
+    // fraction
+    // 	$volatile odd := ((num & 1 ) > 0 ) $buffering 1
+    //  file prog.linked.opt.aa, line 116
+    // (num & 1 )
+    &[AND_u6_u6_529_inst] (num konst_528_wire_constant) (AND_u6_u6_529_wire)   $flowthrough 
+    $delay AND_u6_u6_529_inst 0
+    // ((num & 1 ) > 0 )
+    >[UGT_u6_u1_531_inst] (AND_u6_u6_529_wire konst_530_wire_constant) (odd_532)   $flowthrough 
+    $delay UGT_u6_u1_531_inst 0
+    // 	$volatile reg_type := (num > 27 ) $buffering 1
+    //  file prog.linked.opt.aa, line 117
+    // (num > 27 )
+    >[UGT_u6_u1_536_inst] (num konst_535_wire_constant) (reg_type_537)   $flowthrough 
+    $delay UGT_u6_u1_536_inst 0
+    // 	x := (reg_type | odd) $buffering 1
+    //  file prog.linked.opt.aa, line 118
+    // (reg_type | odd)
+    |[OR_u1_u1_541_inst] (reg_type_537 odd_532) (x_542)   
+    $buffering  $out OR_u1_u1_541_inst x_542 1
+    $delay OR_u1_u1_541_inst 1
+    // 	$volatile reg_cnt := ((( $mux reg_type (num - 28 )  (28  - num) )  >> 1 ) + ( $mux x 1   0  ) ) $buffering 1
+    //  file prog.linked.opt.aa, line 119
+    // (num - 28 )
+    -[SUB_u6_u6_547_inst] (num konst_546_wire_constant) (SUB_u6_u6_547_wire)   $flowthrough 
+    $delay SUB_u6_u6_547_inst 0
+    // (28  - num)
+    -[SUB_u6_u6_550_inst] (konst_548_wire_constant num) (SUB_u6_u6_550_wire)   $flowthrough 
+    $delay SUB_u6_u6_550_inst 0
+    // ( $mux reg_type (num - 28 )  (28  - num) ) 
+    ? [MUX_551_inst] (reg_type_537 SUB_u6_u6_547_wire SUB_u6_u6_550_wire) (MUX_551_wire)  $flowthrough
+    // (( $mux reg_type (num - 28 )  (28  - num) )  >> 1 )
+    >>[LSHR_u6_u6_553_inst] (MUX_551_wire konst_552_wire_constant) (LSHR_u6_u6_553_wire)   $flowthrough 
+    $delay LSHR_u6_u6_553_inst 0
+    // ( $mux x 1   0  ) 
+    ? [MUX_557_inst] (x_542 konst_555_wire_constant konst_556_wire_constant) (MUX_557_wire)  $flowthrough
+    // ((( $mux reg_type (num - 28 )  (28  - num) )  >> 1 ) + ( $mux x 1   0  ) )
+    +[ADD_u6_u6_558_inst] (LSHR_u6_u6_553_wire MUX_557_wire) (reg_cnt_559)   $flowthrough 
+    $delay ADD_u6_u6_558_inst 0
+    //  $volatile 	$call shift_toMake_fraction ((frac && ($bitcast ($uint<5>) _b0  )) ($bitcast ($uint<4>) (reg_cnt + 3 ) ) ) (fraction_1 ) 
+    //  file prog.linked.opt.aa, line 120
+    // (frac && ($bitcast ($uint<5>) _b0  ))
+    &&[CONCAT_u12_u17_564_inst] (frac type_cast_563_wire_constant) (CONCAT_u12_u17_564_wire)   $flowthrough 
+    $delay CONCAT_u12_u17_564_inst 0
+    // (reg_cnt + 3 )
+    +[ADD_u6_u6_567_inst] (reg_cnt_559 konst_566_wire_constant) (ADD_u6_u6_567_wire)   $flowthrough 
+    $delay ADD_u6_u6_567_inst 0
+    // ($bitcast ($uint<4>) (reg_cnt + 3 ) )
+    # := [type_cast_568_inst] (ADD_u6_u6_567_wire) (type_cast_568_wire)   $flowthrough
+    $delay type_cast_568_inst 0
+    $call [call_stmt_570_call] $module shift_toMake_fraction(CONCAT_u12_u17_564_wire type_cast_568_wire) (fraction_1_570)   $flowthrough
+    // 	$volatile is_there_frac := (reg_cnt < 13 ) $buffering 1
+    //  file prog.linked.opt.aa, line 121
+    // (reg_cnt < 13 )
+    <[ULT_u6_u1_574_inst] (reg_cnt_559 konst_573_wire_constant) (is_there_frac_575)   $flowthrough 
+    $delay ULT_u6_u1_574_inst 0
+    // 	$volatile fraction_2 := ( $slice fraction_1 16 1 )  $buffering 1
+    //  file prog.linked.opt.aa, line 122
+    // ( $slice fraction_1 16 1 ) 
+    [:] [slice_578_inst] (fraction_1_570 16 1) (fraction_2_579)  $flowthrough
+    $delay slice_578_inst 0
+    // 	fraction := ( $mux is_there_frac ( $mux (fraction_1 [] 0 ) (fraction_2 + 1 )  fraction_2 )   ($bitcast ($uint<16>) _b0  ) )  $buffering 1
+    //  file prog.linked.opt.aa, line 123
+    // (fraction_1 [] 0 )
+    [][BITSEL_u17_u1_584_inst] (fraction_1_570 konst_583_wire_constant) (BITSEL_u17_u1_584_wire)   $flowthrough 
+    $delay BITSEL_u17_u1_584_inst 0
+    // (fraction_2 + 1 )
+    +[ADD_u16_u16_587_inst] (fraction_2_579 konst_586_wire_constant) (ADD_u16_u16_587_wire)   $flowthrough 
+    $delay ADD_u16_u16_587_inst 0
+    // ( $mux (fraction_1 [] 0 ) (fraction_2 + 1 )  fraction_2 ) 
+    ? [MUX_589_inst] (BITSEL_u17_u1_584_wire ADD_u16_u16_587_wire fraction_2_579) (MUX_589_wire)  $flowthrough
+    // ( $mux is_there_frac ( $mux (fraction_1 [] 0 ) (fraction_2 + 1 )  fraction_2 )   ($bitcast ($uint<16>) _b0  ) ) 
+    ? [MUX_592_inst] (is_there_frac_575 MUX_589_wire type_cast_591_wire_constant) (fraction) 
+    $buffering  $out MUX_592_inst fraction 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$volatile $module [complement] 
+{
+  $in num:$int<16>
+  // can point into  foreign( $void )
+  $out result:$int<16>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %complement
+  //  file prog.linked.opt.aa, line 125
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    // Volatile! CP is left blank 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %complement
+    //  file prog.linked.opt.aa, line 125
+    // 	$volatile convert := (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<16>) _b0  )) $buffering 1
+    //  file prog.linked.opt.aa, line 130
+    $constant $W[convert_604] : $int<17> := _b10000000000000000 // 65536
+    // ($bitcast ($uint<1>) _b0  )
+    $constant $W[type_cast_608_wire_constant] : $int<1> := _b0// 0
+    // 	$volatile res_temp := (convert - (($bitcast ($uint<1>) _b0  ) && num)) $buffering 1
+    //  file prog.linked.opt.aa, line 131
+    // (($bitcast ($uint<1>) _b0  ) && num)
+    $intermediate $W[CONCAT_u1_u17_610_wire] : $int<17>
+    // res_temp
+    $W[res_temp_612] : $int<17>
+    // 	result := ( $slice res_temp 15 0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 132
+    // result
+    // 	$volatile res_temp := (convert - (($bitcast ($uint<1>) _b0  ) && num)) $buffering 1
+    //  file prog.linked.opt.aa, line 131
+    // (($bitcast ($uint<1>) _b0  ) && num)
+    &&[CONCAT_u1_u17_610_inst] (type_cast_608_wire_constant num) (CONCAT_u1_u17_610_wire)   $flowthrough 
+    $delay CONCAT_u1_u17_610_inst 0
+    // (convert - (($bitcast ($uint<1>) _b0  ) && num))
+    -[SUB_u17_u17_611_inst] (convert_604 CONCAT_u1_u17_610_wire) (res_temp_612)   $flowthrough 
+    $delay SUB_u17_u17_611_inst 0
+    // 	result := ( $slice res_temp 15 0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 132
+    // ( $slice res_temp 15 0 ) 
+    [:] [slice_615_inst] (res_temp_612 15 0) (result) 
+    $buffering  $out slice_615_inst result 1
+    $delay slice_615_inst 1
+  }
+  // end data-path
+  // Volatile module.. no links.
+}
+$module [FP32_to_posit16] 
+{
+  $in F:$int<32>
+  // can point into  foreign( $void )
+  $out P:$int<16>
+  // can point into  foreign( $void )
+  // pipe-declarations for block %FP32_to_posit16
+  //  file prog.linked.opt.aa, line 134
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    ::[call_stmt_625_to_assign_stmt_667] 
+    {
+      // start: WAR dependencies for zero
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for zero
+      // start: WAR dependencies for normal
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for normal
+      // start: WAR dependencies for inf
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for inf
+      // start:  $volatile 	$call classify_FP32 (F ) (zero normal inf ) 
+      //  file prog.linked.opt.aa, line 139
+      // volatile! 
+      // Call input argument 0
+      // F
+      // Call output argument 0
+      // (as target) zero
+      // Call output argument 1
+      // (as target) normal
+      // Call output argument 2
+      // (as target) inf
+      // start: WAR dependencies for zero
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for zero
+      // start: WAR dependencies for normal
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for normal
+      // start: WAR dependencies for inf
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for inf
+      // end:  $volatile 	$call classify_FP32 (F ) (zero normal inf ) 
+      // start: WAR dependencies for exp_biased_28
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for exp_biased_28
+      // start:  	$volatile exp_biased_28 := ( $slice (( $slice F 30 23 )  - 99 ) 5 0 )  $buffering 1
+      //  file prog.linked.opt.aa, line 140
+      // volatile! 
+      // Source expression
+      // ( $slice (( $slice F 30 23 )  - 99 ) 5 0 ) 
+      // (( $slice F 30 23 )  - 99 )
+      // ( $slice F 30 23 ) 
+      // F
+      // Target expression
+      // (as target) exp_biased_28
+      // start: WAR dependencies for exp_biased_28
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for exp_biased_28
+      // end:  	$volatile exp_biased_28 := ( $slice (( $slice F 30 23 )  - 99 ) 5 0 )  $buffering 1
+      // start: WAR dependencies for posit_exp
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for posit_exp
+      // start:  $volatile 	$call make_exponent (exp_biased_28 ) (posit_exp ) 
+      //  file prog.linked.opt.aa, line 141
+      // volatile! 
+      // Call input argument 0
+      // exp_biased_28
+      // Call output argument 0
+      // (as target) posit_exp
+      // start: WAR dependencies for posit_exp
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for posit_exp
+      // end:  $volatile 	$call make_exponent (exp_biased_28 ) (posit_exp ) 
+      // start: WAR dependencies for posit_frac
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for posit_frac
+      // start:  $volatile 	$call make_fraction (exp_biased_28 ( $slice F 22 11 )  ) (posit_frac ) 
+      //  file prog.linked.opt.aa, line 142
+      // volatile! 
+      // Call input argument 0
+      // exp_biased_28
+      // Call input argument 1
+      // ( $slice F 22 11 ) 
+      // F
+      // Call output argument 0
+      // (as target) posit_frac
+      // start: WAR dependencies for posit_frac
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for posit_frac
+      // end:  $volatile 	$call make_fraction (exp_biased_28 ( $slice F 22 11 )  ) (posit_frac ) 
+      // start: WAR dependencies for posit_wo_sign
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for posit_wo_sign
+      // start:  	$volatile posit_wo_sign := (posit_exp | posit_frac) $buffering 1
+      //  file prog.linked.opt.aa, line 143
+      // volatile! 
+      // Source expression
+      // (posit_exp | posit_frac)
+      // posit_exp
+      // posit_frac
+      // Target expression
+      // (as target) posit_wo_sign
+      // start: WAR dependencies for posit_wo_sign
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for posit_wo_sign
+      // end:  	$volatile posit_wo_sign := (posit_exp | posit_frac) $buffering 1
+      // start: WAR dependencies for posit_c
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for posit_c
+      // start:  $volatile 	$call complement (posit_wo_sign ) (posit_c ) 
+      //  file prog.linked.opt.aa, line 144
+      // volatile! 
+      // Call input argument 0
+      // posit_wo_sign
+      // Call output argument 0
+      // (as target) posit_c
+      // start: WAR dependencies for posit_c
+      // ignored out-of-scope w_root  F : $uint<32> 
+      // done: WAR dependencies for posit_c
+      // end:  $volatile 	$call complement (posit_wo_sign ) (posit_c ) 
+      // start:  	P := ( $mux normal ( $mux (F [] 31 ) posit_c  posit_wo_sign )   ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  )  $buffering 1// bits of buffering = 16. 
+      //  file prog.linked.opt.aa, line 145
+      // Source expression
+      // ( $mux normal ( $mux (F [] 31 ) posit_c  posit_wo_sign )   ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  ) 
+      $T[MUX_666_sample_start_] 
+      $T[MUX_666_sample_completed_] 
+      $T[MUX_666_update_start_] 
+      $T[MUX_666_update_completed_] 
+      // normal
+      // ( $mux (F [] 31 ) posit_c  posit_wo_sign ) 
+      // (F [] 31 )
+      // F
+      // posit_c
+      // posit_wo_sign
+      // ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) ) 
+      // zero
+      // start: Forward dependencies from normal to transition MUX_666_sample_start_
+      // done: Forward dependencies from normal to transition MUX_666_sample_start_
+      // start: Forward dependencies from ( $mux (F [] 31 ) posit_c  posit_wo_sign )  to transition MUX_666_sample_start_
+      // done: Forward dependencies from ( $mux (F [] 31 ) posit_c  posit_wo_sign )  to transition MUX_666_sample_start_
+      // start: Forward dependencies from ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  to transition MUX_666_sample_start_
+      // done: Forward dependencies from ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  to transition MUX_666_sample_start_
+      ;;[MUX_666_start] 
+      {
+        // ternary expression: 
+        $T [req] $T [ack] // sample req/ack
+      }
+      ;;[MUX_666_complete] 
+      {
+        // ternary expression: 
+        $T [req] $T [ack] // update req/ack
+      }
+      MUX_666_sample_start_ &-> (MUX_666_start)
+      MUX_666_sample_completed_ <-& (MUX_666_start)
+      MUX_666_sample_completed_ &-> ($null)
+      MUX_666_update_start_ &-> (MUX_666_complete)
+      MUX_666_update_completed_ <-& (MUX_666_complete)
+      // Target expression
+      // (as target) P
+      // P
+      // write to interface object
+      // start: WAR dependencies for P
+      // done: WAR dependencies for P
+      // P
+      // write to interface object
+      // end:  	P := ( $mux normal ( $mux (F [] 31 ) posit_c  posit_wo_sign )   ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  )  $buffering 1// bits of buffering = 16. 
+      // load-store dependencies..
+    }
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %FP32_to_posit16
+    //  file prog.linked.opt.aa, line 134
+    //  $volatile 	$call classify_FP32 (F ) (zero normal inf ) 
+    //  file prog.linked.opt.aa, line 139
+    // 99 
+    $constant $W[konst_629_wire_constant] : $int<8> := _b01100011// 99
+    //  $volatile 	$call make_exponent (exp_biased_28 ) (posit_exp ) 
+    //  file prog.linked.opt.aa, line 141
+    //  $volatile 	$call make_fraction (exp_biased_28 ( $slice F 22 11 )  ) (posit_frac ) 
+    //  file prog.linked.opt.aa, line 142
+    //  $volatile 	$call complement (posit_wo_sign ) (posit_c ) 
+    //  file prog.linked.opt.aa, line 144
+    // ( $mux normal ( $mux (F [] 31 ) posit_c  posit_wo_sign )   ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  ) 
+    // ( $mux (F [] 31 ) posit_c  posit_wo_sign ) 
+    // 31 
+    $constant $W[konst_652_wire_constant] : $int<32> := _b00000000000000000000000000011111// 31
+    // ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) ) 
+    // ($bitcast ($uint<16>) _b0  )
+    $constant $W[type_cast_659_wire_constant] : $int<16> := _b0000000000000000// 0
+    // (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  ))
+    $constant $W[CONCAT_u1_u16_664_wire_constant] : $int<16> := _b1000000000000000// 32768
+    //  $volatile 	$call classify_FP32 (F ) (zero normal inf ) 
+    //  file prog.linked.opt.aa, line 139
+    // zero
+    $W[zero_625] : $int<1>
+    // normal
+    $W[normal_625] : $int<1>
+    // inf
+    $W[inf_625] : $int<1>
+    // 	$volatile exp_biased_28 := ( $slice (( $slice F 30 23 )  - 99 ) 5 0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 140
+    // ( $slice F 30 23 ) 
+    $intermediate $W[slice_628_wire] : $int<8>
+    // (( $slice F 30 23 )  - 99 )
+    $intermediate $W[SUB_u8_u8_630_wire] : $int<8>
+    // exp_biased_28
+    $W[exp_biased_28_632] : $int<6>
+    //  $volatile 	$call make_exponent (exp_biased_28 ) (posit_exp ) 
+    //  file prog.linked.opt.aa, line 141
+    // posit_exp
+    $W[posit_exp_635] : $int<16>
+    //  $volatile 	$call make_fraction (exp_biased_28 ( $slice F 22 11 )  ) (posit_frac ) 
+    //  file prog.linked.opt.aa, line 142
+    // ( $slice F 22 11 ) 
+    $intermediate $W[slice_638_wire] : $int<12>
+    // posit_frac
+    $W[posit_frac_640] : $int<16>
+    // 	$volatile posit_wo_sign := (posit_exp | posit_frac) $buffering 1
+    //  file prog.linked.opt.aa, line 143
+    // posit_wo_sign
+    $W[posit_wo_sign_645] : $int<16>
+    //  $volatile 	$call complement (posit_wo_sign ) (posit_c ) 
+    //  file prog.linked.opt.aa, line 144
+    // posit_c
+    $W[posit_c_648] : $int<16>
+    // 	P := ( $mux normal ( $mux (F [] 31 ) posit_c  posit_wo_sign )   ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  )  $buffering 1// bits of buffering = 16. 
+    //  file prog.linked.opt.aa, line 145
+    // (F [] 31 )
+    $intermediate $W[BITSEL_u32_u1_653_wire] : $int<1>
+    // ( $mux (F [] 31 ) posit_c  posit_wo_sign ) 
+    $intermediate $W[MUX_656_wire] : $int<16>
+    // ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) ) 
+    $intermediate $W[MUX_665_wire] : $int<16>
+    // P
+    //  $volatile 	$call classify_FP32 (F ) (zero normal inf ) 
+    //  file prog.linked.opt.aa, line 139
+    $call [call_stmt_625_call] $module classify_FP32(F) (zero_625 normal_625 inf_625)   $flowthrough
+    // 	$volatile exp_biased_28 := ( $slice (( $slice F 30 23 )  - 99 ) 5 0 )  $buffering 1
+    //  file prog.linked.opt.aa, line 140
+    // ( $slice F 30 23 ) 
+    [:] [slice_628_inst] (F 30 23) (slice_628_wire)  $flowthrough
+    $delay slice_628_inst 0
+    // (( $slice F 30 23 )  - 99 )
+    -[SUB_u8_u8_630_inst] (slice_628_wire konst_629_wire_constant) (SUB_u8_u8_630_wire)   $flowthrough 
+    $delay SUB_u8_u8_630_inst 0
+    // ( $slice (( $slice F 30 23 )  - 99 ) 5 0 ) 
+    [:] [slice_631_inst] (SUB_u8_u8_630_wire 5 0) (exp_biased_28_632)  $flowthrough
+    $delay slice_631_inst 0
+    //  $volatile 	$call make_exponent (exp_biased_28 ) (posit_exp ) 
+    //  file prog.linked.opt.aa, line 141
+    $call [call_stmt_635_call] $module make_exponent(exp_biased_28_632) (posit_exp_635)   $flowthrough
+    //  $volatile 	$call make_fraction (exp_biased_28 ( $slice F 22 11 )  ) (posit_frac ) 
+    //  file prog.linked.opt.aa, line 142
+    // ( $slice F 22 11 ) 
+    [:] [slice_638_inst] (F 22 11) (slice_638_wire)  $flowthrough
+    $delay slice_638_inst 0
+    $call [call_stmt_640_call] $module make_fraction(exp_biased_28_632 slice_638_wire) (posit_frac_640)   $flowthrough
+    // 	$volatile posit_wo_sign := (posit_exp | posit_frac) $buffering 1
+    //  file prog.linked.opt.aa, line 143
+    // (posit_exp | posit_frac)
+    |[OR_u16_u16_644_inst] (posit_exp_635 posit_frac_640) (posit_wo_sign_645)   $flowthrough 
+    $delay OR_u16_u16_644_inst 0
+    //  $volatile 	$call complement (posit_wo_sign ) (posit_c ) 
+    //  file prog.linked.opt.aa, line 144
+    $call [call_stmt_648_call] $module complement(posit_wo_sign_645) (posit_c_648)   $flowthrough
+    // 	P := ( $mux normal ( $mux (F [] 31 ) posit_c  posit_wo_sign )   ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  )  $buffering 1// bits of buffering = 16. 
+    //  file prog.linked.opt.aa, line 145
+    // (F [] 31 )
+    [][BITSEL_u32_u1_653_inst] (F konst_652_wire_constant) (BITSEL_u32_u1_653_wire)   $flowthrough 
+    $delay BITSEL_u32_u1_653_inst 0
+    // ( $mux (F [] 31 ) posit_c  posit_wo_sign ) 
+    ? [MUX_656_inst] (BITSEL_u32_u1_653_wire posit_c_648 posit_wo_sign_645) (MUX_656_wire)  $flowthrough
+    // ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) ) 
+    ? [MUX_665_inst] (zero_625 type_cast_659_wire_constant CONCAT_u1_u16_664_wire_constant) (MUX_665_wire)  $flowthrough
+    // ( $mux normal ( $mux (F [] 31 ) posit_c  posit_wo_sign )   ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  ) 
+    ? [MUX_666_inst] (normal_625 MUX_656_wire MUX_665_wire) (P) 
+    $buffering  $out MUX_666_inst P 1
+  }
+  // end data-path
+  //  $volatile 	$call classify_FP32 (F ) (zero normal inf ) 
+  //  file prog.linked.opt.aa, line 139
+  // F
+  // 	$volatile exp_biased_28 := ( $slice (( $slice F 30 23 )  - 99 ) 5 0 )  $buffering 1
+  //  file prog.linked.opt.aa, line 140
+  // (( $slice F 30 23 )  - 99 )
+  // F
+  //  $volatile 	$call make_exponent (exp_biased_28 ) (posit_exp ) 
+  //  file prog.linked.opt.aa, line 141
+  // exp_biased_28
+  //  $volatile 	$call make_fraction (exp_biased_28 ( $slice F 22 11 )  ) (posit_frac ) 
+  //  file prog.linked.opt.aa, line 142
+  // exp_biased_28
+  // F
+  // 	$volatile posit_wo_sign := (posit_exp | posit_frac) $buffering 1
+  //  file prog.linked.opt.aa, line 143
+  // (posit_exp | posit_frac)
+  // posit_exp
+  // posit_frac
+  //  $volatile 	$call complement (posit_wo_sign ) (posit_c ) 
+  //  file prog.linked.opt.aa, line 144
+  // posit_wo_sign
+  // 	P := ( $mux normal ( $mux (F [] 31 ) posit_c  posit_wo_sign )   ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  )  $buffering 1// bits of buffering = 16. 
+  //  file prog.linked.opt.aa, line 145
+  // normal
+  // (F [] 31 )
+  // F
+  // posit_c
+  // posit_wo_sign
+  // ( $mux (F [] 31 ) posit_c  posit_wo_sign ) 
+  // zero
+  // ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) ) 
+  // ( $mux normal ( $mux (F [] 31 ) posit_c  posit_wo_sign )   ( $mux zero ($bitcast ($uint<16>) _b0  )  (($bitcast ($uint<1>) _b1  ) && ($bitcast ($uint<15>) _b0  )) )  ) 
+  MUX_666_inst <=> (call_stmt_625_to_assign_stmt_667/MUX_666_start/req call_stmt_625_to_assign_stmt_667/MUX_666_complete/req) (call_stmt_625_to_assign_stmt_667/MUX_666_start/ack call_stmt_625_to_assign_stmt_667/MUX_666_complete/ack)
+}
+$module [global_storage_initializer_] 
+{
+  // pipe-declarations for block %global_storage_initializer_
+  //  file prog.linked.opt.aa, line 147
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %global_storage_initializer_
+    //  file prog.linked.opt.aa, line 147
+  }
+  // end data-path
+}

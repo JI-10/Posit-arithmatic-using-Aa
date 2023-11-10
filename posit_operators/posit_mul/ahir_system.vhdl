@@ -1,0 +1,3259 @@
+-- VHDL produced by vc2vhdl from virtual circuit (vc) description 
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity FP19_to_posit16_Volatile is -- 
+  port ( -- 
+    F : in  std_logic_vector(18 downto 0);
+    P : out  std_logic_vector(15 downto 0)-- 
+  );
+  -- 
+end entity FP19_to_posit16_Volatile;
+architecture FP19_to_posit16_Volatile_arch of FP19_to_posit16_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(19-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal F_buffer :  std_logic_vector(18 downto 0);
+  -- output port buffer signals
+  signal P_buffer :  std_logic_vector(15 downto 0);
+  -- volatile/operator module components. 
+  component classify_FP19_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(18 downto 0);
+      zero : out  std_logic_vector(0 downto 0);
+      inf : out  std_logic_vector(0 downto 0);
+      normal : out  std_logic_vector(0 downto 0)-- 
+    );
+    -- 
+  end component; 
+  component make_exponent_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(5 downto 0);
+      reg_exp : out  std_logic_vector(15 downto 0)-- 
+    );
+    -- 
+  end component; 
+  component make_fraction_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(5 downto 0);
+      frac : in  std_logic_vector(11 downto 0);
+      fraction : out  std_logic_vector(15 downto 0)-- 
+    );
+    -- 
+  end component; 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  F_buffer <= F;
+  -- output handling  -------------------------------------------------------
+  P <= P_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal CONCAT_u1_u16_636_wire_constant : std_logic_vector(15 downto 0);
+    signal MUX_637_wire : std_logic_vector(15 downto 0);
+    signal MUX_638_wire : std_logic_vector(15 downto 0);
+    signal OR_u16_u16_628_wire : std_logic_vector(15 downto 0);
+    signal exponent_612 : std_logic_vector(5 downto 0);
+    signal fraction_616 : std_logic_vector(11 downto 0);
+    signal inf_608 : std_logic_vector(0 downto 0);
+    signal normal_608 : std_logic_vector(0 downto 0);
+    signal posit_exp_619 : std_logic_vector(15 downto 0);
+    signal posit_frac_623 : std_logic_vector(15 downto 0);
+    signal slice_604_wire : std_logic_vector(18 downto 0);
+    signal type_cast_631_wire_constant : std_logic_vector(15 downto 0);
+    signal zero_608 : std_logic_vector(0 downto 0);
+    -- 
+  begin -- 
+    CONCAT_u1_u16_636_wire_constant <= "1000000000000000";
+    type_cast_631_wire_constant <= "0000000000000000";
+    -- flow-through select operator MUX_637_inst
+    MUX_637_wire <= type_cast_631_wire_constant when (zero_608(0) /=  '0') else CONCAT_u1_u16_636_wire_constant;
+    -- flow-through select operator MUX_638_inst
+    MUX_638_wire <= OR_u16_u16_628_wire when (normal_608(0) /=  '0') else MUX_637_wire;
+    -- flow-through slice operator slice_604_inst
+    slice_604_wire <= F_buffer(18 downto 0);
+    -- flow-through slice operator slice_611_inst
+    exponent_612 <= F_buffer(17 downto 12);
+    -- flow-through slice operator slice_615_inst
+    fraction_616 <= F_buffer(11 downto 0);
+    -- interlock type_cast_639_inst
+    process(MUX_638_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 15 downto 0) := MUX_638_wire(15 downto 0);
+      P_buffer <= tmp_var; -- 
+    end process;
+    -- binary operator OR_u16_u16_628_inst
+    process(posit_exp_619, posit_frac_623) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(posit_exp_619, posit_frac_623, tmp_var);
+      OR_u16_u16_628_wire <= tmp_var; --
+    end process;
+    volatile_operator_classify_FP19_602: classify_FP19_Volatile port map(num => slice_604_wire, zero => zero_608, inf => inf_608, normal => normal_608); 
+    volatile_operator_make_exponent_605: make_exponent_Volatile port map(num => exponent_612, reg_exp => posit_exp_619); 
+    volatile_operator_make_fraction_606: make_fraction_Volatile port map(num => exponent_612, frac => fraction_616, fraction => posit_frac_623); 
+    -- 
+  end Block; -- data_path
+  -- 
+end FP19_to_posit16_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity check_overflow_underflow_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(7 downto 0);
+    overflow : out  std_logic_vector(0 downto 0);
+    underflow : out  std_logic_vector(0 downto 0)-- 
+  );
+  -- 
+end entity check_overflow_underflow_Volatile;
+architecture check_overflow_underflow_Volatile_arch of check_overflow_underflow_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(8-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(7 downto 0);
+  -- output port buffer signals
+  signal overflow_buffer :  std_logic_vector(0 downto 0);
+  signal underflow_buffer :  std_logic_vector(0 downto 0);
+  -- volatile/operator module components. 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  -- output handling  -------------------------------------------------------
+  overflow <= overflow_buffer;
+  underflow <= underflow_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal konst_649_wire_constant : std_logic_vector(7 downto 0);
+    signal konst_654_wire_constant : std_logic_vector(7 downto 0);
+    -- 
+  begin -- 
+    konst_649_wire_constant <= "00011100";
+    konst_654_wire_constant <= "11100100";
+    -- binary operator SGT_i8_u1_650_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntSgt_proc(num_buffer, konst_649_wire_constant, tmp_var);
+      overflow_buffer <= tmp_var; --
+    end process;
+    -- binary operator SLT_i8_u1_655_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntSlt_proc(num_buffer, konst_654_wire_constant, tmp_var);
+      underflow_buffer <= tmp_var; --
+    end process;
+    -- 
+  end Block; -- data_path
+  -- 
+end check_overflow_underflow_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity classifyFp19_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(18 downto 0);
+    zero : out  std_logic_vector(0 downto 0);
+    normal : out  std_logic_vector(0 downto 0);
+    inf : out  std_logic_vector(0 downto 0)-- 
+  );
+  -- 
+end entity classifyFp19_Volatile;
+architecture classifyFp19_Volatile_arch of classifyFp19_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(19-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(18 downto 0);
+  -- output port buffer signals
+  signal zero_buffer :  std_logic_vector(0 downto 0);
+  signal normal_buffer :  std_logic_vector(0 downto 0);
+  signal inf_buffer :  std_logic_vector(0 downto 0);
+  -- volatile/operator module components. 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  -- output handling  -------------------------------------------------------
+  zero <= zero_buffer;
+  zero_buffer <= "0";
+  normal <= normal_buffer;
+  inf <= inf_buffer;
+  inf_buffer <= "0";
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal exp_666 : std_logic_vector(5 downto 0);
+    signal konst_669_wire_constant : std_logic_vector(5 downto 0);
+    -- 
+  begin -- 
+    konst_669_wire_constant <= "111001";
+    -- flow-through slice operator slice_665_inst
+    exp_666 <= num_buffer(17 downto 12);
+    -- binary operator ULT_u6_u1_670_inst
+    process(exp_666) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntUlt_proc(exp_666, konst_669_wire_constant, tmp_var);
+      normal_buffer <= tmp_var; --
+    end process;
+    -- 
+  end Block; -- data_path
+  -- 
+end classifyFp19_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity classify_FP19_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(18 downto 0);
+    zero : out  std_logic_vector(0 downto 0);
+    inf : out  std_logic_vector(0 downto 0);
+    normal : out  std_logic_vector(0 downto 0)-- 
+  );
+  -- 
+end entity classify_FP19_Volatile;
+architecture classify_FP19_Volatile_arch of classify_FP19_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(19-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(18 downto 0);
+  -- output port buffer signals
+  signal zero_buffer :  std_logic_vector(0 downto 0);
+  signal inf_buffer :  std_logic_vector(0 downto 0);
+  signal normal_buffer :  std_logic_vector(0 downto 0);
+  -- volatile/operator module components. 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  -- output handling  -------------------------------------------------------
+  zero <= zero_buffer;
+  inf <= inf_buffer;
+  normal <= normal_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal EQ_u6_u1_27_wire : std_logic_vector(0 downto 0);
+    signal EQ_u6_u1_34_wire : std_logic_vector(0 downto 0);
+    signal NOT_u1_u1_24_wire : std_logic_vector(0 downto 0);
+    signal exponent_16 : std_logic_vector(5 downto 0);
+    signal konst_19_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_26_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_33_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_9_wire_constant : std_logic_vector(18 downto 0);
+    signal sign_11 : std_logic_vector(0 downto 0);
+    -- 
+  begin -- 
+    konst_19_wire_constant <= "111001";
+    konst_26_wire_constant <= "111111";
+    konst_33_wire_constant <= "111111";
+    konst_9_wire_constant <= "0000000000000010010";
+    -- flow-through slice operator slice_15_inst
+    exponent_16 <= num_buffer(17 downto 12);
+    -- binary operator AND_u1_u1_28_inst
+    process(NOT_u1_u1_24_wire, EQ_u6_u1_27_wire) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntAnd_proc(NOT_u1_u1_24_wire, EQ_u6_u1_27_wire, tmp_var);
+      zero_buffer <= tmp_var; --
+    end process;
+    -- binary operator AND_u1_u1_35_inst
+    process(sign_11, EQ_u6_u1_34_wire) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntAnd_proc(sign_11, EQ_u6_u1_34_wire, tmp_var);
+      inf_buffer <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u19_u1_10_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(num_buffer, konst_9_wire_constant, tmp_var);
+      sign_11 <= tmp_var; --
+    end process;
+    -- binary operator EQ_u6_u1_27_inst
+    process(exponent_16) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntEq_proc(exponent_16, konst_26_wire_constant, tmp_var);
+      EQ_u6_u1_27_wire <= tmp_var; --
+    end process;
+    -- binary operator EQ_u6_u1_34_inst
+    process(exponent_16) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntEq_proc(exponent_16, konst_33_wire_constant, tmp_var);
+      EQ_u6_u1_34_wire <= tmp_var; --
+    end process;
+    -- unary operator NOT_u1_u1_24_inst
+    process(sign_11) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      SingleInputOperation("ApIntNot", sign_11, tmp_var);
+      NOT_u1_u1_24_wire <= tmp_var; -- 
+    end process;
+    -- binary operator ULT_u6_u1_20_inst
+    process(exponent_16) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntUlt_proc(exponent_16, konst_19_wire_constant, tmp_var);
+      normal_buffer <= tmp_var; --
+    end process;
+    -- 
+  end Block; -- data_path
+  -- 
+end classify_FP19_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity classify_posit_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(15 downto 0);
+    zero : out  std_logic_vector(0 downto 0);
+    normal : out  std_logic_vector(0 downto 0);
+    inf : out  std_logic_vector(0 downto 0)-- 
+  );
+  -- 
+end entity classify_posit_Volatile;
+architecture classify_posit_Volatile_arch of classify_posit_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(16-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(15 downto 0);
+  -- output port buffer signals
+  signal zero_buffer :  std_logic_vector(0 downto 0);
+  signal normal_buffer :  std_logic_vector(0 downto 0);
+  signal inf_buffer :  std_logic_vector(0 downto 0);
+  -- volatile/operator module components. 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  -- output handling  -------------------------------------------------------
+  zero <= zero_buffer;
+  normal <= normal_buffer;
+  inf <= inf_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal BITSEL_u16_u1_730_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u16_u1_738_wire : std_logic_vector(0 downto 0);
+    signal NOT_u1_u1_731_wire : std_logic_vector(0 downto 0);
+    signal exp_all_zero_722 : std_logic_vector(0 downto 0);
+    signal konst_720_wire_constant : std_logic_vector(14 downto 0);
+    signal konst_729_wire_constant : std_logic_vector(15 downto 0);
+    signal konst_737_wire_constant : std_logic_vector(15 downto 0);
+    signal slice_719_wire : std_logic_vector(14 downto 0);
+    -- 
+  begin -- 
+    konst_720_wire_constant <= "000000000000000";
+    konst_729_wire_constant <= "0000000000001111";
+    konst_737_wire_constant <= "0000000000001111";
+    -- flow-through slice operator slice_719_inst
+    slice_719_wire <= num_buffer(14 downto 0);
+    -- binary operator AND_u1_u1_733_inst
+    process(NOT_u1_u1_731_wire, exp_all_zero_722) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntAnd_proc(NOT_u1_u1_731_wire, exp_all_zero_722, tmp_var);
+      zero_buffer <= tmp_var; --
+    end process;
+    -- binary operator AND_u1_u1_740_inst
+    process(BITSEL_u16_u1_738_wire, exp_all_zero_722) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntAnd_proc(BITSEL_u16_u1_738_wire, exp_all_zero_722, tmp_var);
+      inf_buffer <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u16_u1_730_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(num_buffer, konst_729_wire_constant, tmp_var);
+      BITSEL_u16_u1_730_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u16_u1_738_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(num_buffer, konst_737_wire_constant, tmp_var);
+      BITSEL_u16_u1_738_wire <= tmp_var; --
+    end process;
+    -- binary operator EQ_u15_u1_721_inst
+    process(slice_719_wire) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntEq_proc(slice_719_wire, konst_720_wire_constant, tmp_var);
+      exp_all_zero_722 <= tmp_var; --
+    end process;
+    -- unary operator NOT_u1_u1_725_inst
+    process(exp_all_zero_722) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      SingleInputOperation("ApIntNot", exp_all_zero_722, tmp_var);
+      normal_buffer <= tmp_var; -- 
+    end process;
+    -- unary operator NOT_u1_u1_731_inst
+    process(BITSEL_u16_u1_730_wire) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      SingleInputOperation("ApIntNot", BITSEL_u16_u1_730_wire, tmp_var);
+      NOT_u1_u1_731_wire <= tmp_var; -- 
+    end process;
+    -- 
+  end Block; -- data_path
+  -- 
+end classify_posit_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity complement_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(15 downto 0);
+    result : out  std_logic_vector(15 downto 0)-- 
+  );
+  -- 
+end entity complement_Volatile;
+architecture complement_Volatile_arch of complement_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(16-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(15 downto 0);
+  -- output port buffer signals
+  signal result_buffer :  std_logic_vector(15 downto 0);
+  -- volatile/operator module components. 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  -- output handling  -------------------------------------------------------
+  result <= result_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal CONCAT_u1_u17_758_wire : std_logic_vector(16 downto 0);
+    signal convert_752 : std_logic_vector(16 downto 0);
+    signal res_temp_760 : std_logic_vector(16 downto 0);
+    signal type_cast_756_wire_constant : std_logic_vector(0 downto 0);
+    -- 
+  begin -- 
+    convert_752 <= "10000000000000000";
+    type_cast_756_wire_constant <= "0";
+    -- flow-through slice operator slice_763_inst
+    result_buffer <= res_temp_760(15 downto 0);
+    -- binary operator CONCAT_u1_u17_758_inst
+    process(type_cast_756_wire_constant, num_buffer) -- 
+      variable tmp_var : std_logic_vector(16 downto 0); -- 
+    begin -- 
+      ApConcat_proc(type_cast_756_wire_constant, num_buffer, tmp_var);
+      CONCAT_u1_u17_758_wire <= tmp_var; --
+    end process;
+    -- binary operator SUB_u17_u17_759_inst
+    process(convert_752, CONCAT_u1_u17_758_wire) -- 
+      variable tmp_var : std_logic_vector(16 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(convert_752, CONCAT_u1_u17_758_wire, tmp_var);
+      res_temp_760 <= tmp_var; --
+    end process;
+    -- 
+  end Block; -- data_path
+  -- 
+end complement_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity find_leftmost_bit_16_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(15 downto 0);
+    bit : in  std_logic_vector(0 downto 0);
+    index : out  std_logic_vector(5 downto 0);
+    not_found : out  std_logic_vector(0 downto 0)-- 
+  );
+  -- 
+end entity find_leftmost_bit_16_Volatile;
+architecture find_leftmost_bit_16_Volatile_arch of find_leftmost_bit_16_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(17-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(15 downto 0);
+  signal bit_buffer :  std_logic_vector(0 downto 0);
+  -- output port buffer signals
+  signal index_buffer :  std_logic_vector(5 downto 0);
+  signal not_found_buffer :  std_logic_vector(0 downto 0);
+  -- volatile/operator module components. 
+  component find_leftmost_bit_8_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(7 downto 0);
+      bit : in  std_logic_vector(0 downto 0);
+      index : out  std_logic_vector(5 downto 0);
+      not_found : out  std_logic_vector(0 downto 0)-- 
+    );
+    -- 
+  end component; 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  bit_buffer <= bit;
+  -- output handling  -------------------------------------------------------
+  index <= index_buffer;
+  not_found <= not_found_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal BITSEL_u1_u1_307_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u1_u1_314_wire : std_logic_vector(0 downto 0);
+    signal MUX_332_wire : std_logic_vector(5 downto 0);
+    signal ind_h_322 : std_logic_vector(5 downto 0);
+    signal index_h_310 : std_logic_vector(5 downto 0);
+    signal index_l_317 : std_logic_vector(5 downto 0);
+    signal konst_306_wire_constant : std_logic_vector(0 downto 0);
+    signal konst_313_wire_constant : std_logic_vector(0 downto 0);
+    signal konst_320_wire_constant : std_logic_vector(5 downto 0);
+    signal not_found_h_310 : std_logic_vector(0 downto 0);
+    signal not_found_l_317 : std_logic_vector(0 downto 0);
+    signal num_h_299 : std_logic_vector(7 downto 0);
+    signal num_l_303 : std_logic_vector(7 downto 0);
+    -- 
+  begin -- 
+    konst_306_wire_constant <= "0";
+    konst_313_wire_constant <= "0";
+    konst_320_wire_constant <= "001000";
+    -- flow-through select operator MUX_332_inst
+    MUX_332_wire <= index_l_317 when (not_found_h_310(0) /=  '0') else ind_h_322;
+    -- flow-through slice operator slice_298_inst
+    num_h_299 <= num_buffer(15 downto 8);
+    -- flow-through slice operator slice_302_inst
+    num_l_303 <= num_buffer(7 downto 0);
+    -- interlock type_cast_333_inst
+    process(MUX_332_wire) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 5 downto 0) := MUX_332_wire(5 downto 0);
+      index_buffer <= tmp_var; -- 
+    end process;
+    -- binary operator ADD_u6_u6_321_inst
+    process(index_h_310) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(index_h_310, konst_320_wire_constant, tmp_var);
+      ind_h_322 <= tmp_var; --
+    end process;
+    -- binary operator AND_u1_u1_326_inst
+    process(not_found_h_310, not_found_l_317) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntAnd_proc(not_found_h_310, not_found_l_317, tmp_var);
+      not_found_buffer <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u1_u1_307_inst
+    process(bit_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(bit_buffer, konst_306_wire_constant, tmp_var);
+      BITSEL_u1_u1_307_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u1_u1_314_inst
+    process(bit_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(bit_buffer, konst_313_wire_constant, tmp_var);
+      BITSEL_u1_u1_314_wire <= tmp_var; --
+    end process;
+    volatile_operator_find_leftmost_bit_8_307: find_leftmost_bit_8_Volatile port map(num => num_h_299, bit => BITSEL_u1_u1_307_wire, index => index_h_310, not_found => not_found_h_310); 
+    volatile_operator_find_leftmost_bit_8_309: find_leftmost_bit_8_Volatile port map(num => num_l_303, bit => BITSEL_u1_u1_314_wire, index => index_l_317, not_found => not_found_l_317); 
+    -- 
+  end Block; -- data_path
+  -- 
+end find_leftmost_bit_16_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity find_leftmost_bit_2_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(1 downto 0);
+    bit : in  std_logic_vector(0 downto 0);
+    index : out  std_logic_vector(5 downto 0);
+    not_found : out  std_logic_vector(0 downto 0)-- 
+  );
+  -- 
+end entity find_leftmost_bit_2_Volatile;
+architecture find_leftmost_bit_2_Volatile_arch of find_leftmost_bit_2_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(3-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(1 downto 0);
+  signal bit_buffer :  std_logic_vector(0 downto 0);
+  -- output port buffer signals
+  signal index_buffer :  std_logic_vector(5 downto 0);
+  signal not_found_buffer :  std_logic_vector(0 downto 0);
+  -- volatile/operator module components. 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  bit_buffer <= bit;
+  -- output handling  -------------------------------------------------------
+  index <= index_buffer;
+  not_found <= not_found_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal BITSEL_u1_u1_181_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u1_u1_190_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u2_u1_178_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u2_u1_187_wire : std_logic_vector(0 downto 0);
+    signal MUX_205_wire : std_logic_vector(0 downto 0);
+    signal OR_u1_u1_196_wire : std_logic_vector(0 downto 0);
+    signal first_bit_183 : std_logic_vector(0 downto 0);
+    signal konst_177_wire_constant : std_logic_vector(1 downto 0);
+    signal konst_180_wire_constant : std_logic_vector(0 downto 0);
+    signal konst_186_wire_constant : std_logic_vector(1 downto 0);
+    signal konst_189_wire_constant : std_logic_vector(0 downto 0);
+    signal second_bit_192 : std_logic_vector(0 downto 0);
+    signal type_cast_202_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_204_wire_constant : std_logic_vector(0 downto 0);
+    -- 
+  begin -- 
+    konst_177_wire_constant <= "00";
+    konst_180_wire_constant <= "0";
+    konst_186_wire_constant <= "01";
+    konst_189_wire_constant <= "0";
+    type_cast_202_wire_constant <= "1";
+    type_cast_204_wire_constant <= "0";
+    -- flow-through select operator MUX_205_inst
+    MUX_205_wire <= type_cast_202_wire_constant when (second_bit_192(0) /=  '0') else type_cast_204_wire_constant;
+    -- interlock type_cast_206_inst
+    process(MUX_205_wire) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 0 downto 0) := MUX_205_wire(0 downto 0);
+      index_buffer <= tmp_var; -- 
+    end process;
+    -- binary operator BITSEL_u1_u1_181_inst
+    process(bit_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(bit_buffer, konst_180_wire_constant, tmp_var);
+      BITSEL_u1_u1_181_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u1_u1_190_inst
+    process(bit_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(bit_buffer, konst_189_wire_constant, tmp_var);
+      BITSEL_u1_u1_190_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u2_u1_178_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(num_buffer, konst_177_wire_constant, tmp_var);
+      BITSEL_u2_u1_178_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u2_u1_187_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(num_buffer, konst_186_wire_constant, tmp_var);
+      BITSEL_u2_u1_187_wire <= tmp_var; --
+    end process;
+    -- binary operator EQ_u1_u1_182_inst
+    process(BITSEL_u2_u1_178_wire, BITSEL_u1_u1_181_wire) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntEq_proc(BITSEL_u2_u1_178_wire, BITSEL_u1_u1_181_wire, tmp_var);
+      first_bit_183 <= tmp_var; --
+    end process;
+    -- binary operator EQ_u1_u1_191_inst
+    process(BITSEL_u2_u1_187_wire, BITSEL_u1_u1_190_wire) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntEq_proc(BITSEL_u2_u1_187_wire, BITSEL_u1_u1_190_wire, tmp_var);
+      second_bit_192 <= tmp_var; --
+    end process;
+    -- unary operator NOT_u1_u1_197_inst
+    process(OR_u1_u1_196_wire) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      SingleInputOperation("ApIntNot", OR_u1_u1_196_wire, tmp_var);
+      not_found_buffer <= tmp_var; -- 
+    end process;
+    -- binary operator OR_u1_u1_196_inst
+    process(first_bit_183, second_bit_192) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(first_bit_183, second_bit_192, tmp_var);
+      OR_u1_u1_196_wire <= tmp_var; --
+    end process;
+    -- 
+  end Block; -- data_path
+  -- 
+end find_leftmost_bit_2_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity find_leftmost_bit_4_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(3 downto 0);
+    bit : in  std_logic_vector(0 downto 0);
+    index : out  std_logic_vector(5 downto 0);
+    not_found : out  std_logic_vector(0 downto 0)-- 
+  );
+  -- 
+end entity find_leftmost_bit_4_Volatile;
+architecture find_leftmost_bit_4_Volatile_arch of find_leftmost_bit_4_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(5-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(3 downto 0);
+  signal bit_buffer :  std_logic_vector(0 downto 0);
+  -- output port buffer signals
+  signal index_buffer :  std_logic_vector(5 downto 0);
+  signal not_found_buffer :  std_logic_vector(0 downto 0);
+  -- volatile/operator module components. 
+  component find_leftmost_bit_2_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(1 downto 0);
+      bit : in  std_logic_vector(0 downto 0);
+      index : out  std_logic_vector(5 downto 0);
+      not_found : out  std_logic_vector(0 downto 0)-- 
+    );
+    -- 
+  end component; 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  bit_buffer <= bit;
+  -- output handling  -------------------------------------------------------
+  index <= index_buffer;
+  not_found <= not_found_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal MUX_246_wire : std_logic_vector(5 downto 0);
+    signal ind_h_236 : std_logic_vector(5 downto 0);
+    signal index_h_226 : std_logic_vector(5 downto 0);
+    signal index_l_231 : std_logic_vector(5 downto 0);
+    signal konst_234_wire_constant : std_logic_vector(5 downto 0);
+    signal not_found_h_226 : std_logic_vector(0 downto 0);
+    signal not_found_l_231 : std_logic_vector(0 downto 0);
+    signal num_h_217 : std_logic_vector(1 downto 0);
+    signal num_l_221 : std_logic_vector(1 downto 0);
+    -- 
+  begin -- 
+    konst_234_wire_constant <= "000010";
+    -- flow-through select operator MUX_246_inst
+    MUX_246_wire <= index_l_231 when (not_found_h_226(0) /=  '0') else ind_h_236;
+    -- flow-through slice operator slice_216_inst
+    num_h_217 <= num_buffer(3 downto 2);
+    -- flow-through slice operator slice_220_inst
+    num_l_221 <= num_buffer(1 downto 0);
+    -- interlock type_cast_247_inst
+    process(MUX_246_wire) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 5 downto 0) := MUX_246_wire(5 downto 0);
+      index_buffer <= tmp_var; -- 
+    end process;
+    -- binary operator ADD_u6_u6_235_inst
+    process(index_h_226) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(index_h_226, konst_234_wire_constant, tmp_var);
+      ind_h_236 <= tmp_var; --
+    end process;
+    -- binary operator AND_u1_u1_240_inst
+    process(not_found_h_226, not_found_l_231) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntAnd_proc(not_found_h_226, not_found_l_231, tmp_var);
+      not_found_buffer <= tmp_var; --
+    end process;
+    volatile_operator_find_leftmost_bit_2_246: find_leftmost_bit_2_Volatile port map(num => num_h_217, bit => bit_buffer, index => index_h_226, not_found => not_found_h_226); 
+    volatile_operator_find_leftmost_bit_2_247: find_leftmost_bit_2_Volatile port map(num => num_l_221, bit => bit_buffer, index => index_l_231, not_found => not_found_l_231); 
+    -- 
+  end Block; -- data_path
+  -- 
+end find_leftmost_bit_4_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity find_leftmost_bit_8_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(7 downto 0);
+    bit : in  std_logic_vector(0 downto 0);
+    index : out  std_logic_vector(5 downto 0);
+    not_found : out  std_logic_vector(0 downto 0)-- 
+  );
+  -- 
+end entity find_leftmost_bit_8_Volatile;
+architecture find_leftmost_bit_8_Volatile_arch of find_leftmost_bit_8_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(9-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(7 downto 0);
+  signal bit_buffer :  std_logic_vector(0 downto 0);
+  -- output port buffer signals
+  signal index_buffer :  std_logic_vector(5 downto 0);
+  signal not_found_buffer :  std_logic_vector(0 downto 0);
+  -- volatile/operator module components. 
+  component find_leftmost_bit_4_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(3 downto 0);
+      bit : in  std_logic_vector(0 downto 0);
+      index : out  std_logic_vector(5 downto 0);
+      not_found : out  std_logic_vector(0 downto 0)-- 
+    );
+    -- 
+  end component; 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  bit_buffer <= bit;
+  -- output handling  -------------------------------------------------------
+  index <= index_buffer;
+  not_found <= not_found_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal MUX_287_wire : std_logic_vector(5 downto 0);
+    signal ind_h_277 : std_logic_vector(5 downto 0);
+    signal index_h_267 : std_logic_vector(5 downto 0);
+    signal index_l_272 : std_logic_vector(5 downto 0);
+    signal konst_275_wire_constant : std_logic_vector(5 downto 0);
+    signal not_found_h_267 : std_logic_vector(0 downto 0);
+    signal not_found_l_272 : std_logic_vector(0 downto 0);
+    signal num_h_258 : std_logic_vector(3 downto 0);
+    signal num_l_262 : std_logic_vector(3 downto 0);
+    -- 
+  begin -- 
+    konst_275_wire_constant <= "000100";
+    -- flow-through select operator MUX_287_inst
+    MUX_287_wire <= index_l_272 when (not_found_h_267(0) /=  '0') else ind_h_277;
+    -- flow-through slice operator slice_257_inst
+    num_h_258 <= num_buffer(7 downto 4);
+    -- flow-through slice operator slice_261_inst
+    num_l_262 <= num_buffer(3 downto 0);
+    -- interlock type_cast_288_inst
+    process(MUX_287_wire) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 5 downto 0) := MUX_287_wire(5 downto 0);
+      index_buffer <= tmp_var; -- 
+    end process;
+    -- binary operator ADD_u6_u6_276_inst
+    process(index_h_267) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(index_h_267, konst_275_wire_constant, tmp_var);
+      ind_h_277 <= tmp_var; --
+    end process;
+    -- binary operator AND_u1_u1_281_inst
+    process(not_found_h_267, not_found_l_272) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntAnd_proc(not_found_h_267, not_found_l_272, tmp_var);
+      not_found_buffer <= tmp_var; --
+    end process;
+    volatile_operator_find_leftmost_bit_4_273: find_leftmost_bit_4_Volatile port map(num => num_h_258, bit => bit_buffer, index => index_h_267, not_found => not_found_h_267); 
+    volatile_operator_find_leftmost_bit_4_274: find_leftmost_bit_4_Volatile port map(num => num_l_262, bit => bit_buffer, index => index_l_272, not_found => not_found_l_272); 
+    -- 
+  end Block; -- data_path
+  -- 
+end find_leftmost_bit_8_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity fmul19_Volatile is -- 
+  port ( -- 
+    f1 : in  std_logic_vector(18 downto 0);
+    f2 : in  std_logic_vector(18 downto 0);
+    result : out  std_logic_vector(18 downto 0)-- 
+  );
+  -- 
+end entity fmul19_Volatile;
+architecture fmul19_Volatile_arch of fmul19_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(38-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal f1_buffer :  std_logic_vector(18 downto 0);
+  signal f2_buffer :  std_logic_vector(18 downto 0);
+  -- output port buffer signals
+  signal result_buffer :  std_logic_vector(18 downto 0);
+  -- volatile/operator module components. 
+  component classifyFp19_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(18 downto 0);
+      zero : out  std_logic_vector(0 downto 0);
+      normal : out  std_logic_vector(0 downto 0);
+      inf : out  std_logic_vector(0 downto 0)-- 
+    );
+    -- 
+  end component; 
+  component check_overflow_underflow_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(7 downto 0);
+      overflow : out  std_logic_vector(0 downto 0);
+      underflow : out  std_logic_vector(0 downto 0)-- 
+    );
+    -- 
+  end component; 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  f1_buffer <= f1;
+  f2_buffer <= f2;
+  -- output handling  -------------------------------------------------------
+  result <= result_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal ADD_i8_i8_870_wire : std_logic_vector(7 downto 0);
+    signal ADD_i8_i8_877_wire : std_logic_vector(7 downto 0);
+    signal CONCAT_u1_u7_899_wire : std_logic_vector(6 downto 0);
+    signal CONCAT_u7_u19_901_wire : std_logic_vector(18 downto 0);
+    signal MUX_902_wire : std_logic_vector(18 downto 0);
+    signal OR_u1_u1_887_wire : std_logic_vector(0 downto 0);
+    signal OR_u1_u1_889_wire : std_logic_vector(0 downto 0);
+    signal OR_u1_u1_893_wire : std_logic_vector(0 downto 0);
+    signal OR_u1_u1_895_wire : std_logic_vector(0 downto 0);
+    signal R_INF_19_890_wire_constant : std_logic_vector(18 downto 0);
+    signal R_ONE_1_836_wire_constant : std_logic_vector(0 downto 0);
+    signal R_ONE_1_841_wire_constant : std_logic_vector(0 downto 0);
+    signal R_ZERO_19_896_wire_constant : std_logic_vector(18 downto 0);
+    signal adjusted_exponent_873 : std_logic_vector(7 downto 0);
+    signal exp_a_806 : std_logic_vector(7 downto 0);
+    signal exp_ab_829 : std_logic_vector(7 downto 0);
+    signal exp_b_824 : std_logic_vector(7 downto 0);
+    signal exponent_result_879 : std_logic_vector(5 downto 0);
+    signal f1_exp_biased_796 : std_logic_vector(5 downto 0);
+    signal f1_frac_839 : std_logic_vector(12 downto 0);
+    signal f1_fraction_800 : std_logic_vector(11 downto 0);
+    signal f1_inf_783 : std_logic_vector(0 downto 0);
+    signal f1_normal_783 : std_logic_vector(0 downto 0);
+    signal f1_zero_783 : std_logic_vector(0 downto 0);
+    signal f2_exp_biased_814 : std_logic_vector(5 downto 0);
+    signal f2_frac_844 : std_logic_vector(12 downto 0);
+    signal f2_fraction_818 : std_logic_vector(11 downto 0);
+    signal f2_inf_788 : std_logic_vector(0 downto 0);
+    signal f2_normal_788 : std_logic_vector(0 downto 0);
+    signal f2_zero_788 : std_logic_vector(0 downto 0);
+    signal frac_result_865 : std_logic_vector(11 downto 0);
+    signal frac_result_ext_852 : std_logic_vector(25 downto 0);
+    signal konst_804_wire_constant : std_logic_vector(7 downto 0);
+    signal konst_822_wire_constant : std_logic_vector(7 downto 0);
+    signal konst_855_wire_constant : std_logic_vector(25 downto 0);
+    signal konst_869_wire_constant : std_logic_vector(7 downto 0);
+    signal konst_876_wire_constant : std_logic_vector(7 downto 0);
+    signal overflow_883 : std_logic_vector(0 downto 0);
+    signal shift_by_one_857 : std_logic_vector(0 downto 0);
+    signal sign_f1_792 : std_logic_vector(0 downto 0);
+    signal sign_f2_810 : std_logic_vector(0 downto 0);
+    signal sign_result_834 : std_logic_vector(0 downto 0);
+    signal slice_861_wire : std_logic_vector(11 downto 0);
+    signal slice_863_wire : std_logic_vector(11 downto 0);
+    signal type_cast_803_wire : std_logic_vector(7 downto 0);
+    signal type_cast_821_wire : std_logic_vector(7 downto 0);
+    signal type_cast_848_wire : std_logic_vector(25 downto 0);
+    signal type_cast_850_wire : std_logic_vector(25 downto 0);
+    signal underflow_883 : std_logic_vector(0 downto 0);
+    signal xxfmul19xxINF_19 : std_logic_vector(18 downto 0);
+    signal xxfmul19xxONE_1 : std_logic_vector(0 downto 0);
+    signal xxfmul19xxZERO_19 : std_logic_vector(18 downto 0);
+    -- 
+  begin -- 
+    R_INF_19_890_wire_constant <= "1111111000000000000";
+    R_ONE_1_836_wire_constant <= "1";
+    R_ONE_1_841_wire_constant <= "1";
+    R_ZERO_19_896_wire_constant <= "0111111000000000000";
+    konst_804_wire_constant <= "00011100";
+    konst_822_wire_constant <= "00011100";
+    konst_855_wire_constant <= "00000000000000000000011001";
+    konst_869_wire_constant <= "00000001";
+    konst_876_wire_constant <= "00011100";
+    xxfmul19xxINF_19 <= "1111111000000000000";
+    xxfmul19xxONE_1 <= "1";
+    xxfmul19xxZERO_19 <= "0111111000000000000";
+    -- flow-through select operator MUX_864_inst
+    frac_result_865 <= slice_861_wire when (shift_by_one_857(0) /=  '0') else slice_863_wire;
+    -- flow-through select operator MUX_872_inst
+    adjusted_exponent_873 <= ADD_i8_i8_870_wire when (shift_by_one_857(0) /=  '0') else exp_ab_829;
+    -- flow-through select operator MUX_902_inst
+    MUX_902_wire <= R_ZERO_19_896_wire_constant when (OR_u1_u1_895_wire(0) /=  '0') else CONCAT_u7_u19_901_wire;
+    -- flow-through select operator MUX_903_inst
+    result_buffer <= R_INF_19_890_wire_constant when (OR_u1_u1_889_wire(0) /=  '0') else MUX_902_wire;
+    -- flow-through slice operator slice_791_inst
+    sign_f1_792 <= f1_buffer(18 downto 18);
+    -- flow-through slice operator slice_795_inst
+    f1_exp_biased_796 <= f1_buffer(17 downto 12);
+    -- flow-through slice operator slice_799_inst
+    f1_fraction_800 <= f1_buffer(11 downto 0);
+    -- flow-through slice operator slice_809_inst
+    sign_f2_810 <= f2_buffer(18 downto 18);
+    -- flow-through slice operator slice_813_inst
+    f2_exp_biased_814 <= f2_buffer(17 downto 12);
+    -- flow-through slice operator slice_817_inst
+    f2_fraction_818 <= f2_buffer(11 downto 0);
+    -- flow-through slice operator slice_861_inst
+    slice_861_wire <= frac_result_ext_852(24 downto 13);
+    -- flow-through slice operator slice_863_inst
+    slice_863_wire <= frac_result_ext_852(23 downto 12);
+    -- interlock type_cast_803_inst
+    process(f1_exp_biased_796) -- 
+      variable tmp_var : std_logic_vector(7 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 5 downto 0) := f1_exp_biased_796(5 downto 0);
+      type_cast_803_wire <= tmp_var; -- 
+    end process;
+    -- interlock type_cast_821_inst
+    process(f2_exp_biased_814) -- 
+      variable tmp_var : std_logic_vector(7 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 5 downto 0) := f2_exp_biased_814(5 downto 0);
+      type_cast_821_wire <= tmp_var; -- 
+    end process;
+    -- interlock type_cast_848_inst
+    process(f1_frac_839) -- 
+      variable tmp_var : std_logic_vector(25 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 12 downto 0) := f1_frac_839(12 downto 0);
+      type_cast_848_wire <= tmp_var; -- 
+    end process;
+    -- interlock type_cast_850_inst
+    process(f2_frac_844) -- 
+      variable tmp_var : std_logic_vector(25 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 12 downto 0) := f2_frac_844(12 downto 0);
+      type_cast_850_wire <= tmp_var; -- 
+    end process;
+    -- interlock type_cast_878_inst
+    process(ADD_i8_i8_877_wire) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 5 downto 0) := ADD_i8_i8_877_wire(5 downto 0);
+      exponent_result_879 <= tmp_var; -- 
+    end process;
+    -- binary operator ADD_i8_i8_828_inst
+    process(exp_a_806, exp_b_824) -- 
+      variable tmp_var : std_logic_vector(7 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(exp_a_806, exp_b_824, tmp_var);
+      exp_ab_829 <= tmp_var; --
+    end process;
+    -- binary operator ADD_i8_i8_870_inst
+    process(exp_ab_829) -- 
+      variable tmp_var : std_logic_vector(7 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(exp_ab_829, konst_869_wire_constant, tmp_var);
+      ADD_i8_i8_870_wire <= tmp_var; --
+    end process;
+    -- binary operator ADD_i8_i8_877_inst
+    process(adjusted_exponent_873) -- 
+      variable tmp_var : std_logic_vector(7 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(adjusted_exponent_873, konst_876_wire_constant, tmp_var);
+      ADD_i8_i8_877_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u26_u1_856_inst
+    process(frac_result_ext_852) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(frac_result_ext_852, konst_855_wire_constant, tmp_var);
+      shift_by_one_857 <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u1_u13_838_inst
+    process(R_ONE_1_836_wire_constant, f1_fraction_800) -- 
+      variable tmp_var : std_logic_vector(12 downto 0); -- 
+    begin -- 
+      ApConcat_proc(R_ONE_1_836_wire_constant, f1_fraction_800, tmp_var);
+      f1_frac_839 <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u1_u13_843_inst
+    process(R_ONE_1_841_wire_constant, f2_fraction_818) -- 
+      variable tmp_var : std_logic_vector(12 downto 0); -- 
+    begin -- 
+      ApConcat_proc(R_ONE_1_841_wire_constant, f2_fraction_818, tmp_var);
+      f2_frac_844 <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u1_u7_899_inst
+    process(sign_result_834, exponent_result_879) -- 
+      variable tmp_var : std_logic_vector(6 downto 0); -- 
+    begin -- 
+      ApConcat_proc(sign_result_834, exponent_result_879, tmp_var);
+      CONCAT_u1_u7_899_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u7_u19_901_inst
+    process(CONCAT_u1_u7_899_wire, frac_result_865) -- 
+      variable tmp_var : std_logic_vector(18 downto 0); -- 
+    begin -- 
+      ApConcat_proc(CONCAT_u1_u7_899_wire, frac_result_865, tmp_var);
+      CONCAT_u7_u19_901_wire <= tmp_var; --
+    end process;
+    -- binary operator MUL_u26_u26_851_inst
+    process(type_cast_848_wire, type_cast_850_wire) -- 
+      variable tmp_var : std_logic_vector(25 downto 0); -- 
+    begin -- 
+      ApIntMul_proc(type_cast_848_wire, type_cast_850_wire, tmp_var);
+      frac_result_ext_852 <= tmp_var; --
+    end process;
+    -- binary operator OR_u1_u1_887_inst
+    process(f1_inf_783, f2_inf_788) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(f1_inf_783, f2_inf_788, tmp_var);
+      OR_u1_u1_887_wire <= tmp_var; --
+    end process;
+    -- binary operator OR_u1_u1_889_inst
+    process(OR_u1_u1_887_wire, overflow_883) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(OR_u1_u1_887_wire, overflow_883, tmp_var);
+      OR_u1_u1_889_wire <= tmp_var; --
+    end process;
+    -- binary operator OR_u1_u1_893_inst
+    process(f1_zero_783, f2_zero_788) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(f1_zero_783, f2_zero_788, tmp_var);
+      OR_u1_u1_893_wire <= tmp_var; --
+    end process;
+    -- binary operator OR_u1_u1_895_inst
+    process(OR_u1_u1_893_wire, underflow_883) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(OR_u1_u1_893_wire, underflow_883, tmp_var);
+      OR_u1_u1_895_wire <= tmp_var; --
+    end process;
+    -- binary operator SUB_i8_i8_805_inst
+    process(type_cast_803_wire) -- 
+      variable tmp_var : std_logic_vector(7 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(type_cast_803_wire, konst_804_wire_constant, tmp_var);
+      exp_a_806 <= tmp_var; --
+    end process;
+    -- binary operator SUB_i8_i8_823_inst
+    process(type_cast_821_wire) -- 
+      variable tmp_var : std_logic_vector(7 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(type_cast_821_wire, konst_822_wire_constant, tmp_var);
+      exp_b_824 <= tmp_var; --
+    end process;
+    -- binary operator XOR_u1_u1_833_inst
+    process(sign_f1_792, sign_f2_810) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntXor_proc(sign_f1_792, sign_f2_810, tmp_var);
+      sign_result_834 <= tmp_var; --
+    end process;
+    volatile_operator_classifyFp19_791: classifyFp19_Volatile port map(num => f1_buffer, zero => f1_zero_783, normal => f1_normal_783, inf => f1_inf_783); 
+    volatile_operator_classifyFp19_792: classifyFp19_Volatile port map(num => f2_buffer, zero => f2_zero_788, normal => f2_normal_788, inf => f2_inf_788); 
+    volatile_operator_check_overflow_underflow_818: check_overflow_underflow_Volatile port map(num => adjusted_exponent_873, overflow => overflow_883, underflow => underflow_883); 
+    -- 
+  end Block; -- data_path
+  -- 
+end fmul19_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity make_exponent_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(5 downto 0);
+    reg_exp : out  std_logic_vector(15 downto 0)-- 
+  );
+  -- 
+end entity make_exponent_Volatile;
+architecture make_exponent_Volatile_arch of make_exponent_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(6-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(5 downto 0);
+  -- output port buffer signals
+  signal reg_exp_buffer :  std_logic_vector(15 downto 0);
+  -- volatile/operator module components. 
+  component shift_toMake_regime_Volatile is -- 
+    port ( -- 
+      shift : in  std_logic_vector(3 downto 0);
+      reg_type : in  std_logic_vector(0 downto 0);
+      regime : out  std_logic_vector(15 downto 0)-- 
+    );
+    -- 
+  end component; 
+  component find_leftmost_bit_16_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(15 downto 0);
+      bit : in  std_logic_vector(0 downto 0);
+      index : out  std_logic_vector(5 downto 0);
+      not_found : out  std_logic_vector(0 downto 0)-- 
+    );
+    -- 
+  end component; 
+  component sll_16_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(15 downto 0);
+      shift : in  std_logic_vector(3 downto 0);
+      shifted : out  std_logic_vector(15 downto 0)-- 
+    );
+    -- 
+  end component; 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  -- output handling  -------------------------------------------------------
+  reg_exp <= reg_exp_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal AND_u1_u1_473_wire : std_logic_vector(0 downto 0);
+    signal AND_u6_u6_400_wire : std_logic_vector(5 downto 0);
+    signal CONCAT_u1_u16_445_wire_constant : std_logic_vector(15 downto 0);
+    signal LSHR_u6_u6_424_wire : std_logic_vector(5 downto 0);
+    signal MUX_422_wire : std_logic_vector(5 downto 0);
+    signal MUX_428_wire : std_logic_vector(5 downto 0);
+    signal MUX_477_wire : std_logic_vector(15 downto 0);
+    signal NOT_u1_u1_452_wire : std_logic_vector(0 downto 0);
+    signal OR_u16_u16_446_wire : std_logic_vector(15 downto 0);
+    signal SUB_u6_u6_418_wire : std_logic_vector(5 downto 0);
+    signal SUB_u6_u6_421_wire : std_logic_vector(5 downto 0);
+    signal SUB_u6_u6_433_wire : std_logic_vector(5 downto 0);
+    signal SUB_u6_u6_460_wire : std_logic_vector(5 downto 0);
+    signal is_there_exp_468 : std_logic_vector(0 downto 0);
+    signal konst_399_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_401_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_406_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_417_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_419_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_423_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_426_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_427_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_432_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_459_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_466_wire_constant : std_logic_vector(5 downto 0);
+    signal not_found_455 : std_logic_vector(0 downto 0);
+    signal odd_403 : std_logic_vector(0 downto 0);
+    signal r_dash_index_455 : std_logic_vector(5 downto 0);
+    signal reg_cnt_430 : std_logic_vector(5 downto 0);
+    signal reg_type_408 : std_logic_vector(0 downto 0);
+    signal regime_437 : std_logic_vector(15 downto 0);
+    signal shifted_1_exponent_463 : std_logic_vector(15 downto 0);
+    signal temp_449 : std_logic_vector(15 downto 0);
+    signal type_cast_434_wire : std_logic_vector(3 downto 0);
+    signal type_cast_457_wire_constant : std_logic_vector(15 downto 0);
+    signal type_cast_461_wire : std_logic_vector(3 downto 0);
+    signal type_cast_476_wire_constant : std_logic_vector(15 downto 0);
+    signal x_413 : std_logic_vector(0 downto 0);
+    -- 
+  begin -- 
+    CONCAT_u1_u16_445_wire_constant <= "1000000000000000";
+    konst_399_wire_constant <= "000001";
+    konst_401_wire_constant <= "000000";
+    konst_406_wire_constant <= "011011";
+    konst_417_wire_constant <= "011100";
+    konst_419_wire_constant <= "011100";
+    konst_423_wire_constant <= "000001";
+    konst_426_wire_constant <= "000001";
+    konst_427_wire_constant <= "000000";
+    konst_432_wire_constant <= "000001";
+    konst_459_wire_constant <= "000001";
+    konst_466_wire_constant <= "001110";
+    type_cast_457_wire_constant <= "0000000000000001";
+    type_cast_476_wire_constant <= "0000000000000000";
+    -- flow-through select operator MUX_422_inst
+    MUX_422_wire <= SUB_u6_u6_418_wire when (reg_type_408(0) /=  '0') else SUB_u6_u6_421_wire;
+    -- flow-through select operator MUX_428_inst
+    MUX_428_wire <= konst_426_wire_constant when (x_413(0) /=  '0') else konst_427_wire_constant;
+    -- flow-through select operator MUX_448_inst
+    temp_449 <= OR_u16_u16_446_wire when (reg_type_408(0) /=  '0') else regime_437;
+    -- flow-through select operator MUX_477_inst
+    MUX_477_wire <= shifted_1_exponent_463 when (AND_u1_u1_473_wire(0) /=  '0') else type_cast_476_wire_constant;
+    -- interlock type_cast_434_inst
+    process(SUB_u6_u6_433_wire) -- 
+      variable tmp_var : std_logic_vector(3 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 3 downto 0) := SUB_u6_u6_433_wire(3 downto 0);
+      type_cast_434_wire <= tmp_var; -- 
+    end process;
+    -- interlock type_cast_461_inst
+    process(SUB_u6_u6_460_wire) -- 
+      variable tmp_var : std_logic_vector(3 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 3 downto 0) := SUB_u6_u6_460_wire(3 downto 0);
+      type_cast_461_wire <= tmp_var; -- 
+    end process;
+    -- binary operator ADD_u6_u6_429_inst
+    process(LSHR_u6_u6_424_wire, MUX_428_wire) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(LSHR_u6_u6_424_wire, MUX_428_wire, tmp_var);
+      reg_cnt_430 <= tmp_var; --
+    end process;
+    -- binary operator AND_u1_u1_473_inst
+    process(odd_403, is_there_exp_468) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntAnd_proc(odd_403, is_there_exp_468, tmp_var);
+      AND_u1_u1_473_wire <= tmp_var; --
+    end process;
+    -- binary operator AND_u6_u6_400_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntAnd_proc(num_buffer, konst_399_wire_constant, tmp_var);
+      AND_u6_u6_400_wire <= tmp_var; --
+    end process;
+    -- binary operator LSHR_u6_u6_424_inst
+    process(MUX_422_wire) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntLSHR_proc(MUX_422_wire, konst_423_wire_constant, tmp_var);
+      LSHR_u6_u6_424_wire <= tmp_var; --
+    end process;
+    -- unary operator NOT_u1_u1_452_inst
+    process(reg_type_408) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      SingleInputOperation("ApIntNot", reg_type_408, tmp_var);
+      NOT_u1_u1_452_wire <= tmp_var; -- 
+    end process;
+    -- binary operator OR_u16_u16_446_inst
+    process(regime_437) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(regime_437, CONCAT_u1_u16_445_wire_constant, tmp_var);
+      OR_u16_u16_446_wire <= tmp_var; --
+    end process;
+    -- binary operator OR_u16_u16_478_inst
+    process(regime_437, MUX_477_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(regime_437, MUX_477_wire, tmp_var);
+      reg_exp_buffer <= tmp_var; --
+    end process;
+    -- binary operator OR_u1_u1_412_inst
+    process(reg_type_408, odd_403) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(reg_type_408, odd_403, tmp_var);
+      x_413 <= tmp_var; --
+    end process;
+    -- binary operator SUB_u6_u6_418_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(num_buffer, konst_417_wire_constant, tmp_var);
+      SUB_u6_u6_418_wire <= tmp_var; --
+    end process;
+    -- binary operator SUB_u6_u6_421_inst
+    process(konst_419_wire_constant, num_buffer) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(konst_419_wire_constant, num_buffer, tmp_var);
+      SUB_u6_u6_421_wire <= tmp_var; --
+    end process;
+    -- binary operator SUB_u6_u6_433_inst
+    process(reg_cnt_430) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(reg_cnt_430, konst_432_wire_constant, tmp_var);
+      SUB_u6_u6_433_wire <= tmp_var; --
+    end process;
+    -- binary operator SUB_u6_u6_460_inst
+    process(r_dash_index_455) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(r_dash_index_455, konst_459_wire_constant, tmp_var);
+      SUB_u6_u6_460_wire <= tmp_var; --
+    end process;
+    -- binary operator UGT_u6_u1_402_inst
+    process(AND_u6_u6_400_wire) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntUgt_proc(AND_u6_u6_400_wire, konst_401_wire_constant, tmp_var);
+      odd_403 <= tmp_var; --
+    end process;
+    -- binary operator UGT_u6_u1_407_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntUgt_proc(num_buffer, konst_406_wire_constant, tmp_var);
+      reg_type_408 <= tmp_var; --
+    end process;
+    -- binary operator ULT_u6_u1_467_inst
+    process(reg_cnt_430) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntUlt_proc(reg_cnt_430, konst_466_wire_constant, tmp_var);
+      is_there_exp_468 <= tmp_var; --
+    end process;
+    volatile_operator_shift_toMake_regime_444: shift_toMake_regime_Volatile port map(shift => type_cast_434_wire, reg_type => reg_type_408, regime => regime_437); 
+    volatile_operator_find_leftmost_bit_16_448: find_leftmost_bit_16_Volatile port map(num => temp_449, bit => NOT_u1_u1_452_wire, index => r_dash_index_455, not_found => not_found_455); 
+    volatile_operator_sll_16_451: sll_16_Volatile port map(num => type_cast_457_wire_constant, shift => type_cast_461_wire, shifted => shifted_1_exponent_463); 
+    -- 
+  end Block; -- data_path
+  -- 
+end make_exponent_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity make_fraction_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(5 downto 0);
+    frac : in  std_logic_vector(11 downto 0);
+    fraction : out  std_logic_vector(15 downto 0)-- 
+  );
+  -- 
+end entity make_fraction_Volatile;
+architecture make_fraction_Volatile_arch of make_fraction_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(18-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(5 downto 0);
+  signal frac_buffer :  std_logic_vector(11 downto 0);
+  -- output port buffer signals
+  signal fraction_buffer :  std_logic_vector(15 downto 0);
+  -- volatile/operator module components. 
+  component shift_toMake_fraction_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(16 downto 0);
+      shift : in  std_logic_vector(3 downto 0);
+      fraction : out  std_logic_vector(16 downto 0)-- 
+    );
+    -- 
+  end component; 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  frac_buffer <= frac;
+  -- output handling  -------------------------------------------------------
+  fraction <= fraction_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal ADD_u16_u16_592_wire : std_logic_vector(15 downto 0);
+    signal ADD_u6_u6_572_wire : std_logic_vector(5 downto 0);
+    signal AND_u6_u6_534_wire : std_logic_vector(5 downto 0);
+    signal BITSEL_u17_u1_589_wire : std_logic_vector(0 downto 0);
+    signal CONCAT_u12_u17_569_wire : std_logic_vector(16 downto 0);
+    signal LSHR_u6_u6_558_wire : std_logic_vector(5 downto 0);
+    signal MUX_556_wire : std_logic_vector(5 downto 0);
+    signal MUX_562_wire : std_logic_vector(5 downto 0);
+    signal MUX_594_wire : std_logic_vector(15 downto 0);
+    signal SUB_u6_u6_552_wire : std_logic_vector(5 downto 0);
+    signal SUB_u6_u6_555_wire : std_logic_vector(5 downto 0);
+    signal fraction_1_575 : std_logic_vector(16 downto 0);
+    signal fraction_2_584 : std_logic_vector(15 downto 0);
+    signal is_there_frac_580 : std_logic_vector(0 downto 0);
+    signal konst_533_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_535_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_540_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_551_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_553_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_557_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_560_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_561_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_571_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_578_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_588_wire_constant : std_logic_vector(16 downto 0);
+    signal konst_591_wire_constant : std_logic_vector(15 downto 0);
+    signal odd_537 : std_logic_vector(0 downto 0);
+    signal reg_cnt_564 : std_logic_vector(5 downto 0);
+    signal reg_type_542 : std_logic_vector(0 downto 0);
+    signal type_cast_568_wire_constant : std_logic_vector(4 downto 0);
+    signal type_cast_573_wire : std_logic_vector(3 downto 0);
+    signal type_cast_596_wire_constant : std_logic_vector(15 downto 0);
+    signal x_547 : std_logic_vector(0 downto 0);
+    -- 
+  begin -- 
+    konst_533_wire_constant <= "000001";
+    konst_535_wire_constant <= "000000";
+    konst_540_wire_constant <= "011011";
+    konst_551_wire_constant <= "011100";
+    konst_553_wire_constant <= "011100";
+    konst_557_wire_constant <= "000001";
+    konst_560_wire_constant <= "000001";
+    konst_561_wire_constant <= "000000";
+    konst_571_wire_constant <= "000011";
+    konst_578_wire_constant <= "001101";
+    konst_588_wire_constant <= "00000000000000000";
+    konst_591_wire_constant <= "0000000000000001";
+    type_cast_568_wire_constant <= "00000";
+    type_cast_596_wire_constant <= "0000000000000000";
+    -- flow-through select operator MUX_556_inst
+    MUX_556_wire <= SUB_u6_u6_552_wire when (reg_type_542(0) /=  '0') else SUB_u6_u6_555_wire;
+    -- flow-through select operator MUX_562_inst
+    MUX_562_wire <= konst_560_wire_constant when (x_547(0) /=  '0') else konst_561_wire_constant;
+    -- flow-through select operator MUX_594_inst
+    MUX_594_wire <= ADD_u16_u16_592_wire when (BITSEL_u17_u1_589_wire(0) /=  '0') else fraction_2_584;
+    -- flow-through select operator MUX_597_inst
+    fraction_buffer <= MUX_594_wire when (is_there_frac_580(0) /=  '0') else type_cast_596_wire_constant;
+    -- flow-through slice operator slice_583_inst
+    fraction_2_584 <= fraction_1_575(16 downto 1);
+    -- interlock type_cast_573_inst
+    process(ADD_u6_u6_572_wire) -- 
+      variable tmp_var : std_logic_vector(3 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 3 downto 0) := ADD_u6_u6_572_wire(3 downto 0);
+      type_cast_573_wire <= tmp_var; -- 
+    end process;
+    -- binary operator ADD_u16_u16_592_inst
+    process(fraction_2_584) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(fraction_2_584, konst_591_wire_constant, tmp_var);
+      ADD_u16_u16_592_wire <= tmp_var; --
+    end process;
+    -- binary operator ADD_u6_u6_563_inst
+    process(LSHR_u6_u6_558_wire, MUX_562_wire) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(LSHR_u6_u6_558_wire, MUX_562_wire, tmp_var);
+      reg_cnt_564 <= tmp_var; --
+    end process;
+    -- binary operator ADD_u6_u6_572_inst
+    process(reg_cnt_564) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(reg_cnt_564, konst_571_wire_constant, tmp_var);
+      ADD_u6_u6_572_wire <= tmp_var; --
+    end process;
+    -- binary operator AND_u6_u6_534_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntAnd_proc(num_buffer, konst_533_wire_constant, tmp_var);
+      AND_u6_u6_534_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u17_u1_589_inst
+    process(fraction_1_575) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(fraction_1_575, konst_588_wire_constant, tmp_var);
+      BITSEL_u17_u1_589_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u12_u17_569_inst
+    process(frac_buffer) -- 
+      variable tmp_var : std_logic_vector(16 downto 0); -- 
+    begin -- 
+      ApConcat_proc(frac_buffer, type_cast_568_wire_constant, tmp_var);
+      CONCAT_u12_u17_569_wire <= tmp_var; --
+    end process;
+    -- binary operator LSHR_u6_u6_558_inst
+    process(MUX_556_wire) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntLSHR_proc(MUX_556_wire, konst_557_wire_constant, tmp_var);
+      LSHR_u6_u6_558_wire <= tmp_var; --
+    end process;
+    -- binary operator OR_u1_u1_546_inst
+    process(reg_type_542, odd_537) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(reg_type_542, odd_537, tmp_var);
+      x_547 <= tmp_var; --
+    end process;
+    -- binary operator SUB_u6_u6_552_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(num_buffer, konst_551_wire_constant, tmp_var);
+      SUB_u6_u6_552_wire <= tmp_var; --
+    end process;
+    -- binary operator SUB_u6_u6_555_inst
+    process(konst_553_wire_constant, num_buffer) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(konst_553_wire_constant, num_buffer, tmp_var);
+      SUB_u6_u6_555_wire <= tmp_var; --
+    end process;
+    -- binary operator UGT_u6_u1_536_inst
+    process(AND_u6_u6_534_wire) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntUgt_proc(AND_u6_u6_534_wire, konst_535_wire_constant, tmp_var);
+      odd_537 <= tmp_var; --
+    end process;
+    -- binary operator UGT_u6_u1_541_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntUgt_proc(num_buffer, konst_540_wire_constant, tmp_var);
+      reg_type_542 <= tmp_var; --
+    end process;
+    -- binary operator ULT_u6_u1_579_inst
+    process(reg_cnt_564) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApIntUlt_proc(reg_cnt_564, konst_578_wire_constant, tmp_var);
+      is_there_frac_580 <= tmp_var; --
+    end process;
+    volatile_operator_shift_toMake_fraction_572: shift_toMake_fraction_Volatile port map(num => CONCAT_u12_u17_569_wire, shift => type_cast_573_wire, fraction => fraction_1_575); 
+    -- 
+  end Block; -- data_path
+  -- 
+end make_fraction_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity pmul19 is -- 
+  generic (tag_length : integer); 
+  port ( -- 
+    P1 : in  std_logic_vector(15 downto 0);
+    P2 : in  std_logic_vector(15 downto 0);
+    result : out  std_logic_vector(15 downto 0);
+    tag_in: in std_logic_vector(tag_length-1 downto 0);
+    tag_out: out std_logic_vector(tag_length-1 downto 0) ;
+    clk : in std_logic;
+    reset : in std_logic;
+    start_req : in std_logic;
+    start_ack : out std_logic;
+    fin_req : in std_logic;
+    fin_ack   : out std_logic-- 
+  );
+  -- 
+end entity pmul19;
+architecture pmul19_arch of pmul19 is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector((tag_length + 32)-1 downto 0);
+  signal default_zero_sig: std_logic;
+  signal in_buffer_write_req: std_logic;
+  signal in_buffer_write_ack: std_logic;
+  signal in_buffer_unload_req_symbol: Boolean;
+  signal in_buffer_unload_ack_symbol: Boolean;
+  signal out_buffer_data_in, out_buffer_data_out: std_logic_vector((tag_length + 16)-1 downto 0);
+  signal out_buffer_read_req: std_logic;
+  signal out_buffer_read_ack: std_logic;
+  signal out_buffer_write_req_symbol: Boolean;
+  signal out_buffer_write_ack_symbol: Boolean;
+  signal tag_ub_out, tag_ilock_out: std_logic_vector(tag_length-1 downto 0);
+  signal tag_push_req, tag_push_ack, tag_pop_req, tag_pop_ack: std_logic;
+  signal tag_unload_req_symbol, tag_unload_ack_symbol, tag_write_req_symbol, tag_write_ack_symbol: Boolean;
+  signal tag_ilock_write_req_symbol, tag_ilock_write_ack_symbol, tag_ilock_read_req_symbol, tag_ilock_read_ack_symbol: Boolean;
+  signal start_req_sig, fin_req_sig, start_ack_sig, fin_ack_sig: std_logic; 
+  signal input_sample_reenable_symbol: Boolean;
+  -- input port buffer signals
+  signal P1_buffer :  std_logic_vector(15 downto 0);
+  signal P1_update_enable: Boolean;
+  signal P2_buffer :  std_logic_vector(15 downto 0);
+  signal P2_update_enable: Boolean;
+  -- output port buffer signals
+  signal result_buffer :  std_logic_vector(15 downto 0);
+  signal result_update_enable: Boolean;
+  signal pmul19_CP_60_start: Boolean;
+  signal pmul19_CP_60_symbol: Boolean;
+  -- volatile/operator module components. 
+  component posit16_to_FP19_Volatile is -- 
+    port ( -- 
+      P : in  std_logic_vector(15 downto 0);
+      F : out  std_logic_vector(18 downto 0)-- 
+    );
+    -- 
+  end component; 
+  component fmul19_Volatile is -- 
+    port ( -- 
+      f1 : in  std_logic_vector(18 downto 0);
+      f2 : in  std_logic_vector(18 downto 0);
+      result : out  std_logic_vector(18 downto 0)-- 
+    );
+    -- 
+  end component; 
+  component FP19_to_posit16_Volatile is -- 
+    port ( -- 
+      F : in  std_logic_vector(18 downto 0);
+      P : out  std_logic_vector(15 downto 0)-- 
+    );
+    -- 
+  end component; 
+  -- links between control-path and data-path
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  in_buffer: UnloadBuffer -- 
+    generic map(name => "pmul19_input_buffer", -- 
+      buffer_size => 1,
+      bypass_flag => false,
+      data_width => tag_length + 32) -- 
+    port map(write_req => in_buffer_write_req, -- 
+      write_ack => in_buffer_write_ack, 
+      write_data => in_buffer_data_in,
+      unload_req => in_buffer_unload_req_symbol, 
+      unload_ack => in_buffer_unload_ack_symbol, 
+      read_data => in_buffer_data_out,
+      clk => clk, reset => reset); -- 
+  in_buffer_data_in(15 downto 0) <= P1;
+  P1_buffer <= in_buffer_data_out(15 downto 0);
+  in_buffer_data_in(31 downto 16) <= P2;
+  P2_buffer <= in_buffer_data_out(31 downto 16);
+  in_buffer_data_in(tag_length + 31 downto 32) <= tag_in;
+  tag_ub_out <= in_buffer_data_out(tag_length + 31 downto 32);
+  in_buffer_write_req <= start_req;
+  start_ack <= in_buffer_write_ack;
+  in_buffer_unload_req_symbol_join: block -- 
+    constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
+    constant place_markings: IntegerArray(0 to 1)  := (0 => 1,1 => 1);
+    constant place_delays: IntegerArray(0 to 1) := (0 => 0,1 => 1);
+    constant joinName: string(1 to 32) := "in_buffer_unload_req_symbol_join"; 
+    signal preds: BooleanArray(1 to 2); -- 
+  begin -- 
+    preds <= in_buffer_unload_ack_symbol & input_sample_reenable_symbol;
+    gj_in_buffer_unload_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+      port map(preds => preds, symbol_out => in_buffer_unload_req_symbol, clk => clk, reset => reset); --
+  end block;
+  -- join of all unload_ack_symbols.. used to trigger CP.
+  pmul19_CP_60_start <= in_buffer_unload_ack_symbol;
+  -- output handling  -------------------------------------------------------
+  out_buffer: ReceiveBuffer -- 
+    generic map(name => "pmul19_out_buffer", -- 
+      buffer_size => 1,
+      full_rate => false,
+      data_width => tag_length + 16) --
+    port map(write_req => out_buffer_write_req_symbol, -- 
+      write_ack => out_buffer_write_ack_symbol, 
+      write_data => out_buffer_data_in,
+      read_req => out_buffer_read_req, 
+      read_ack => out_buffer_read_ack, 
+      read_data => out_buffer_data_out,
+      clk => clk, reset => reset); -- 
+  out_buffer_data_in(15 downto 0) <= result_buffer;
+  result <= out_buffer_data_out(15 downto 0);
+  out_buffer_data_in(tag_length + 15 downto 16) <= tag_ilock_out;
+  tag_out <= out_buffer_data_out(tag_length + 15 downto 16);
+  out_buffer_write_req_symbol_join: block -- 
+    constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 1,2 => 1);
+    constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 1,2 => 0);
+    constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 1,2 => 0);
+    constant joinName: string(1 to 32) := "out_buffer_write_req_symbol_join"; 
+    signal preds: BooleanArray(1 to 3); -- 
+  begin -- 
+    preds <= pmul19_CP_60_symbol & out_buffer_write_ack_symbol & tag_ilock_read_ack_symbol;
+    gj_out_buffer_write_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+      port map(preds => preds, symbol_out => out_buffer_write_req_symbol, clk => clk, reset => reset); --
+  end block;
+  -- write-to output-buffer produces  reenable input sampling
+  input_sample_reenable_symbol <= out_buffer_write_ack_symbol;
+  -- fin-req/ack level protocol..
+  out_buffer_read_req <= fin_req;
+  fin_ack <= out_buffer_read_ack;
+  ----- tag-queue --------------------------------------------------
+  -- interlock buffer for TAG.. to provide required buffering.
+  tagIlock: InterlockBuffer -- 
+    generic map(name => "tag-interlock-buffer", -- 
+      buffer_size => 1,
+      bypass_flag => false,
+      in_data_width => tag_length,
+      out_data_width => tag_length) -- 
+    port map(write_req => tag_ilock_write_req_symbol, -- 
+      write_ack => tag_ilock_write_ack_symbol, 
+      write_data => tag_ub_out,
+      read_req => tag_ilock_read_req_symbol, 
+      read_ack => tag_ilock_read_ack_symbol, 
+      read_data => tag_ilock_out, 
+      clk => clk, reset => reset); -- 
+  -- tag ilock-buffer control logic. 
+  tag_ilock_write_req_symbol_join: block -- 
+    constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
+    constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
+    constant place_delays: IntegerArray(0 to 1) := (0 => 0,1 => 1);
+    constant joinName: string(1 to 31) := "tag_ilock_write_req_symbol_join"; 
+    signal preds: BooleanArray(1 to 2); -- 
+  begin -- 
+    preds <= pmul19_CP_60_start & tag_ilock_write_ack_symbol;
+    gj_tag_ilock_write_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+      port map(preds => preds, symbol_out => tag_ilock_write_req_symbol, clk => clk, reset => reset); --
+  end block;
+  tag_ilock_read_req_symbol_join: block -- 
+    constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 1,2 => 1);
+    constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 1,2 => 1);
+    constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 0);
+    constant joinName: string(1 to 30) := "tag_ilock_read_req_symbol_join"; 
+    signal preds: BooleanArray(1 to 3); -- 
+  begin -- 
+    preds <= pmul19_CP_60_start & tag_ilock_read_ack_symbol & out_buffer_write_ack_symbol;
+    gj_tag_ilock_read_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+      port map(preds => preds, symbol_out => tag_ilock_read_req_symbol, clk => clk, reset => reset); --
+  end block;
+  -- the control path --------------------------------------------------
+  always_true_symbol <= true; 
+  default_zero_sig <= '0';
+  pmul19_CP_60: Block -- control-path 
+    signal pmul19_CP_60_elements: BooleanArray(0 downto 0);
+    -- 
+  begin -- 
+    pmul19_CP_60_elements(0) <= pmul19_CP_60_start;
+    pmul19_CP_60_symbol <= pmul19_CP_60_elements(0);
+    -- CP-element group 0:  transition  bypass 
+    -- CP-element group 0: predecessors 
+    -- CP-element group 0: successors 
+    -- CP-element group 0:  members (4) 
+      -- CP-element group 0: 	 $entry
+      -- CP-element group 0: 	 $exit
+      -- CP-element group 0: 	 call_stmt_1067_to_call_stmt_1077/$entry
+      -- CP-element group 0: 	 call_stmt_1067_to_call_stmt_1077/$exit
+      -- 
+    --  hookup: inputs to control-path 
+    -- hookup: output from control-path 
+    -- 
+  end Block; -- control-path
+  -- the data path
+  data_path: Block -- 
+    signal F19_res_1074 : std_logic_vector(18 downto 0);
+    signal F1_1067 : std_logic_vector(18 downto 0);
+    signal F2_1070 : std_logic_vector(18 downto 0);
+    -- 
+  begin -- 
+    volatile_operator_posit16_to_FP19_975: posit16_to_FP19_Volatile port map(P => P1_buffer, F => F1_1067); 
+    volatile_operator_posit16_to_FP19_976: posit16_to_FP19_Volatile port map(P => P2_buffer, F => F2_1070); 
+    volatile_operator_fmul19_977: fmul19_Volatile port map(f1 => F1_1067, f2 => F2_1070, result => F19_res_1074); 
+    volatile_operator_FP19_to_posit16_978: FP19_to_posit16_Volatile port map(F => F19_res_1074, P => result_buffer); 
+    -- 
+  end Block; -- data_path
+  -- 
+end pmul19_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity posit16_to_FP19_Volatile is -- 
+  port ( -- 
+    P : in  std_logic_vector(15 downto 0);
+    F : out  std_logic_vector(18 downto 0)-- 
+  );
+  -- 
+end entity posit16_to_FP19_Volatile;
+architecture posit16_to_FP19_Volatile_arch of posit16_to_FP19_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(16-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal P_buffer :  std_logic_vector(15 downto 0);
+  -- output port buffer signals
+  signal F_buffer :  std_logic_vector(18 downto 0);
+  -- volatile/operator module components. 
+  component split_posit_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(15 downto 0);
+      sign : out  std_logic_vector(0 downto 0);
+      exp : out  std_logic_vector(5 downto 0);
+      fraction : out  std_logic_vector(11 downto 0)-- 
+    );
+    -- 
+  end component; 
+  component classify_posit_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(15 downto 0);
+      zero : out  std_logic_vector(0 downto 0);
+      normal : out  std_logic_vector(0 downto 0);
+      inf : out  std_logic_vector(0 downto 0)-- 
+    );
+    -- 
+  end component; 
+  component complement_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(15 downto 0);
+      result : out  std_logic_vector(15 downto 0)-- 
+    );
+    -- 
+  end component; 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  P_buffer <= P;
+  -- output handling  -------------------------------------------------------
+  F <= F_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal CONCAT_u1_u7_1044_wire : std_logic_vector(6 downto 0);
+    signal CONCAT_u1_u7_1050_wire : std_logic_vector(6 downto 0);
+    signal CONCAT_u7_u19_1046_wire : std_logic_vector(18 downto 0);
+    signal CONCAT_u7_u19_1052_wire : std_logic_vector(18 downto 0);
+    signal MUX_1053_wire : std_logic_vector(18 downto 0);
+    signal MUX_1057_wire : std_logic_vector(18 downto 0);
+    signal P_c_1032 : std_logic_vector(15 downto 0);
+    signal R_INF_19_1056_wire_constant : std_logic_vector(18 downto 0);
+    signal R_ZERO_19_1055_wire_constant : std_logic_vector(18 downto 0);
+    signal exp_1029 : std_logic_vector(5 downto 0);
+    signal exp_c_1037 : std_logic_vector(5 downto 0);
+    signal fraction_1029 : std_logic_vector(11 downto 0);
+    signal fraction_c_1037 : std_logic_vector(11 downto 0);
+    signal inf_1024 : std_logic_vector(0 downto 0);
+    signal normal_1024 : std_logic_vector(0 downto 0);
+    signal sign_1029 : std_logic_vector(0 downto 0);
+    signal sign_c_1037 : std_logic_vector(0 downto 0);
+    signal type_cast_1042_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_1048_wire_constant : std_logic_vector(0 downto 0);
+    signal xxposit16_to_FP19xxINF_19 : std_logic_vector(18 downto 0);
+    signal xxposit16_to_FP19xxZERO_19 : std_logic_vector(18 downto 0);
+    signal zero_1024 : std_logic_vector(0 downto 0);
+    -- 
+  begin -- 
+    R_INF_19_1056_wire_constant <= "1111111000000000000";
+    R_ZERO_19_1055_wire_constant <= "0111111000000000000";
+    type_cast_1042_wire_constant <= "1";
+    type_cast_1048_wire_constant <= "0";
+    xxposit16_to_FP19xxINF_19 <= "1111111000000000000";
+    xxposit16_to_FP19xxZERO_19 <= "0111111000000000000";
+    -- flow-through select operator MUX_1053_inst
+    MUX_1053_wire <= CONCAT_u7_u19_1046_wire when (sign_1029(0) /=  '0') else CONCAT_u7_u19_1052_wire;
+    -- flow-through select operator MUX_1057_inst
+    MUX_1057_wire <= R_ZERO_19_1055_wire_constant when (zero_1024(0) /=  '0') else R_INF_19_1056_wire_constant;
+    -- flow-through select operator MUX_1058_inst
+    F_buffer <= MUX_1053_wire when (normal_1024(0) /=  '0') else MUX_1057_wire;
+    -- binary operator CONCAT_u1_u7_1044_inst
+    process(type_cast_1042_wire_constant, exp_c_1037) -- 
+      variable tmp_var : std_logic_vector(6 downto 0); -- 
+    begin -- 
+      ApConcat_proc(type_cast_1042_wire_constant, exp_c_1037, tmp_var);
+      CONCAT_u1_u7_1044_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u1_u7_1050_inst
+    process(type_cast_1048_wire_constant, exp_1029) -- 
+      variable tmp_var : std_logic_vector(6 downto 0); -- 
+    begin -- 
+      ApConcat_proc(type_cast_1048_wire_constant, exp_1029, tmp_var);
+      CONCAT_u1_u7_1050_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u7_u19_1046_inst
+    process(CONCAT_u1_u7_1044_wire, fraction_c_1037) -- 
+      variable tmp_var : std_logic_vector(18 downto 0); -- 
+    begin -- 
+      ApConcat_proc(CONCAT_u1_u7_1044_wire, fraction_c_1037, tmp_var);
+      CONCAT_u7_u19_1046_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u7_u19_1052_inst
+    process(CONCAT_u1_u7_1050_wire, fraction_1029) -- 
+      variable tmp_var : std_logic_vector(18 downto 0); -- 
+    begin -- 
+      ApConcat_proc(CONCAT_u1_u7_1050_wire, fraction_1029, tmp_var);
+      CONCAT_u7_u19_1052_wire <= tmp_var; --
+    end process;
+    volatile_operator_classify_posit_950: classify_posit_Volatile port map(num => P_buffer, zero => zero_1024, normal => normal_1024, inf => inf_1024); 
+    volatile_operator_split_posit_951: split_posit_Volatile port map(num => P_buffer, sign => sign_1029, exp => exp_1029, fraction => fraction_1029); 
+    volatile_operator_complement_952: complement_Volatile port map(num => P_buffer, result => P_c_1032); 
+    volatile_operator_split_posit_953: split_posit_Volatile port map(num => P_c_1032, sign => sign_c_1037, exp => exp_c_1037, fraction => fraction_c_1037); 
+    -- 
+  end Block; -- data_path
+  -- 
+end posit16_to_FP19_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity shift_toMake_fraction_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(16 downto 0);
+    shift : in  std_logic_vector(3 downto 0);
+    fraction : out  std_logic_vector(16 downto 0)-- 
+  );
+  -- 
+end entity shift_toMake_fraction_Volatile;
+architecture shift_toMake_fraction_Volatile_arch of shift_toMake_fraction_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(21-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(16 downto 0);
+  signal shift_buffer :  std_logic_vector(3 downto 0);
+  -- output port buffer signals
+  signal fraction_buffer :  std_logic_vector(16 downto 0);
+  -- volatile/operator module components. 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  shift_buffer <= shift;
+  -- output handling  -------------------------------------------------------
+  fraction <= fraction_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal BITSEL_u4_u1_489_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u4_u1_499_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u4_u1_509_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u4_u1_519_wire : std_logic_vector(0 downto 0);
+    signal LSHR_u17_u17_492_wire : std_logic_vector(16 downto 0);
+    signal LSHR_u17_u17_502_wire : std_logic_vector(16 downto 0);
+    signal LSHR_u17_u17_512_wire : std_logic_vector(16 downto 0);
+    signal LSHR_u17_u17_522_wire : std_logic_vector(16 downto 0);
+    signal X0_495 : std_logic_vector(16 downto 0);
+    signal X1_505 : std_logic_vector(16 downto 0);
+    signal X2_515 : std_logic_vector(16 downto 0);
+    signal konst_488_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_491_wire_constant : std_logic_vector(16 downto 0);
+    signal konst_498_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_501_wire_constant : std_logic_vector(16 downto 0);
+    signal konst_508_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_511_wire_constant : std_logic_vector(16 downto 0);
+    signal konst_518_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_521_wire_constant : std_logic_vector(16 downto 0);
+    -- 
+  begin -- 
+    konst_488_wire_constant <= "0000";
+    konst_491_wire_constant <= "00000000000000001";
+    konst_498_wire_constant <= "0001";
+    konst_501_wire_constant <= "00000000000000010";
+    konst_508_wire_constant <= "0010";
+    konst_511_wire_constant <= "00000000000000100";
+    konst_518_wire_constant <= "0011";
+    konst_521_wire_constant <= "00000000000001000";
+    -- flow-through select operator MUX_494_inst
+    X0_495 <= LSHR_u17_u17_492_wire when (BITSEL_u4_u1_489_wire(0) /=  '0') else num_buffer;
+    -- flow-through select operator MUX_504_inst
+    X1_505 <= LSHR_u17_u17_502_wire when (BITSEL_u4_u1_499_wire(0) /=  '0') else X0_495;
+    -- flow-through select operator MUX_514_inst
+    X2_515 <= LSHR_u17_u17_512_wire when (BITSEL_u4_u1_509_wire(0) /=  '0') else X1_505;
+    -- flow-through select operator MUX_524_inst
+    fraction_buffer <= LSHR_u17_u17_522_wire when (BITSEL_u4_u1_519_wire(0) /=  '0') else X2_515;
+    -- binary operator BITSEL_u4_u1_489_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_488_wire_constant, tmp_var);
+      BITSEL_u4_u1_489_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u4_u1_499_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_498_wire_constant, tmp_var);
+      BITSEL_u4_u1_499_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u4_u1_509_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_508_wire_constant, tmp_var);
+      BITSEL_u4_u1_509_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u4_u1_519_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_518_wire_constant, tmp_var);
+      BITSEL_u4_u1_519_wire <= tmp_var; --
+    end process;
+    -- binary operator LSHR_u17_u17_492_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(16 downto 0); -- 
+    begin -- 
+      ApIntLSHR_proc(num_buffer, konst_491_wire_constant, tmp_var);
+      LSHR_u17_u17_492_wire <= tmp_var; --
+    end process;
+    -- binary operator LSHR_u17_u17_502_inst
+    process(X0_495) -- 
+      variable tmp_var : std_logic_vector(16 downto 0); -- 
+    begin -- 
+      ApIntLSHR_proc(X0_495, konst_501_wire_constant, tmp_var);
+      LSHR_u17_u17_502_wire <= tmp_var; --
+    end process;
+    -- binary operator LSHR_u17_u17_512_inst
+    process(X1_505) -- 
+      variable tmp_var : std_logic_vector(16 downto 0); -- 
+    begin -- 
+      ApIntLSHR_proc(X1_505, konst_511_wire_constant, tmp_var);
+      LSHR_u17_u17_512_wire <= tmp_var; --
+    end process;
+    -- binary operator LSHR_u17_u17_522_inst
+    process(X2_515) -- 
+      variable tmp_var : std_logic_vector(16 downto 0); -- 
+    begin -- 
+      ApIntLSHR_proc(X2_515, konst_521_wire_constant, tmp_var);
+      LSHR_u17_u17_522_wire <= tmp_var; --
+    end process;
+    -- 
+  end Block; -- data_path
+  -- 
+end shift_toMake_fraction_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity shift_toMake_regime_Volatile is -- 
+  port ( -- 
+    shift : in  std_logic_vector(3 downto 0);
+    reg_type : in  std_logic_vector(0 downto 0);
+    regime : out  std_logic_vector(15 downto 0)-- 
+  );
+  -- 
+end entity shift_toMake_regime_Volatile;
+architecture shift_toMake_regime_Volatile_arch of shift_toMake_regime_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(5-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal shift_buffer :  std_logic_vector(3 downto 0);
+  signal reg_type_buffer :  std_logic_vector(0 downto 0);
+  -- output port buffer signals
+  signal regime_buffer :  std_logic_vector(15 downto 0);
+  -- volatile/operator module components. 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  shift_buffer <= shift;
+  reg_type_buffer <= reg_type;
+  -- output handling  -------------------------------------------------------
+  regime <= regime_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal BITSEL_u4_u1_104_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u4_u1_126_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u4_u1_149_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u4_u1_81_wire : std_logic_vector(0 downto 0);
+    signal CONCAT_u1_u14_75_wire : std_logic_vector(13 downto 0);
+    signal CONCAT_u1_u2_66_wire : std_logic_vector(1 downto 0);
+    signal CONCAT_u1_u2_92_wire : std_logic_vector(1 downto 0);
+    signal CONCAT_u1_u3_115_wire : std_logic_vector(2 downto 0);
+    signal CONCAT_u1_u5_137_wire : std_logic_vector(4 downto 0);
+    signal CONCAT_u1_u9_160_wire : std_logic_vector(8 downto 0);
+    signal CONCAT_u2_u16_96_wire : std_logic_vector(15 downto 0);
+    signal CONCAT_u3_u16_118_wire : std_logic_vector(15 downto 0);
+    signal CONCAT_u5_u16_141_wire : std_logic_vector(15 downto 0);
+    signal CONCAT_u9_u16_164_wire : std_logic_vector(15 downto 0);
+    signal LSHR_u16_u16_107_wire : std_logic_vector(15 downto 0);
+    signal LSHR_u16_u16_129_wire : std_logic_vector(15 downto 0);
+    signal LSHR_u16_u16_152_wire : std_logic_vector(15 downto 0);
+    signal LSHR_u16_u16_84_wire : std_logic_vector(15 downto 0);
+    signal MUX_114_wire : std_logic_vector(1 downto 0);
+    signal MUX_136_wire : std_logic_vector(3 downto 0);
+    signal MUX_159_wire : std_logic_vector(7 downto 0);
+    signal MUX_65_wire : std_logic_vector(0 downto 0);
+    signal MUX_71_wire : std_logic_vector(0 downto 0);
+    signal MUX_91_wire : std_logic_vector(0 downto 0);
+    signal OR_u16_u16_119_wire : std_logic_vector(15 downto 0);
+    signal OR_u16_u16_142_wire : std_logic_vector(15 downto 0);
+    signal OR_u16_u16_165_wire : std_logic_vector(15 downto 0);
+    signal OR_u16_u16_97_wire : std_logic_vector(15 downto 0);
+    signal R_ONE_1_62_wire_constant : std_logic_vector(0 downto 0);
+    signal R_ONE_1_70_wire_constant : std_logic_vector(0 downto 0);
+    signal R_ONE_1_88_wire_constant : std_logic_vector(0 downto 0);
+    signal R_ONE_2_111_wire_constant : std_logic_vector(1 downto 0);
+    signal R_ONE_4_133_wire_constant : std_logic_vector(3 downto 0);
+    signal R_ONE_8_156_wire_constant : std_logic_vector(7 downto 0);
+    signal X0_100 : std_logic_vector(15 downto 0);
+    signal X1_122 : std_logic_vector(15 downto 0);
+    signal X2_145 : std_logic_vector(15 downto 0);
+    signal konst_103_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_106_wire_constant : std_logic_vector(15 downto 0);
+    signal konst_125_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_128_wire_constant : std_logic_vector(15 downto 0);
+    signal konst_148_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_151_wire_constant : std_logic_vector(15 downto 0);
+    signal konst_80_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_83_wire_constant : std_logic_vector(15 downto 0);
+    signal temp_77 : std_logic_vector(15 downto 0);
+    signal type_cast_109_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_113_wire_constant : std_logic_vector(1 downto 0);
+    signal type_cast_117_wire_constant : std_logic_vector(12 downto 0);
+    signal type_cast_131_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_135_wire_constant : std_logic_vector(3 downto 0);
+    signal type_cast_140_wire_constant : std_logic_vector(10 downto 0);
+    signal type_cast_154_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_158_wire_constant : std_logic_vector(7 downto 0);
+    signal type_cast_163_wire_constant : std_logic_vector(6 downto 0);
+    signal type_cast_60_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_64_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_69_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_74_wire_constant : std_logic_vector(12 downto 0);
+    signal type_cast_86_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_90_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_95_wire_constant : std_logic_vector(13 downto 0);
+    signal xxshift_toMake_regimexxONE_1 : std_logic_vector(0 downto 0);
+    signal xxshift_toMake_regimexxONE_2 : std_logic_vector(1 downto 0);
+    signal xxshift_toMake_regimexxONE_4 : std_logic_vector(3 downto 0);
+    signal xxshift_toMake_regimexxONE_8 : std_logic_vector(7 downto 0);
+    -- 
+  begin -- 
+    R_ONE_1_62_wire_constant <= "1";
+    R_ONE_1_70_wire_constant <= "1";
+    R_ONE_1_88_wire_constant <= "1";
+    R_ONE_2_111_wire_constant <= "11";
+    R_ONE_4_133_wire_constant <= "1111";
+    R_ONE_8_156_wire_constant <= "11111111";
+    konst_103_wire_constant <= "0001";
+    konst_106_wire_constant <= "0000000000000010";
+    konst_125_wire_constant <= "0010";
+    konst_128_wire_constant <= "0000000000000100";
+    konst_148_wire_constant <= "0011";
+    konst_151_wire_constant <= "0000000000001000";
+    konst_80_wire_constant <= "0000";
+    konst_83_wire_constant <= "0000000000000001";
+    type_cast_109_wire_constant <= "0";
+    type_cast_113_wire_constant <= "00";
+    type_cast_117_wire_constant <= "0000000000000";
+    type_cast_131_wire_constant <= "0";
+    type_cast_135_wire_constant <= "0000";
+    type_cast_140_wire_constant <= "00000000000";
+    type_cast_154_wire_constant <= "0";
+    type_cast_158_wire_constant <= "00000000";
+    type_cast_163_wire_constant <= "0000000";
+    type_cast_60_wire_constant <= "0";
+    type_cast_64_wire_constant <= "0";
+    type_cast_69_wire_constant <= "0";
+    type_cast_74_wire_constant <= "0000000000000";
+    type_cast_86_wire_constant <= "0";
+    type_cast_90_wire_constant <= "0";
+    type_cast_95_wire_constant <= "00000000000000";
+    xxshift_toMake_regimexxONE_1 <= "1";
+    xxshift_toMake_regimexxONE_2 <= "11";
+    xxshift_toMake_regimexxONE_4 <= "1111";
+    xxshift_toMake_regimexxONE_8 <= "11111111";
+    -- flow-through select operator MUX_114_inst
+    MUX_114_wire <= R_ONE_2_111_wire_constant when (reg_type_buffer(0) /=  '0') else type_cast_113_wire_constant;
+    -- flow-through select operator MUX_121_inst
+    X1_122 <= OR_u16_u16_119_wire when (BITSEL_u4_u1_104_wire(0) /=  '0') else X0_100;
+    -- flow-through select operator MUX_136_inst
+    MUX_136_wire <= R_ONE_4_133_wire_constant when (reg_type_buffer(0) /=  '0') else type_cast_135_wire_constant;
+    -- flow-through select operator MUX_144_inst
+    X2_145 <= OR_u16_u16_142_wire when (BITSEL_u4_u1_126_wire(0) /=  '0') else X1_122;
+    -- flow-through select operator MUX_159_inst
+    MUX_159_wire <= R_ONE_8_156_wire_constant when (reg_type_buffer(0) /=  '0') else type_cast_158_wire_constant;
+    -- flow-through select operator MUX_167_inst
+    regime_buffer <= OR_u16_u16_165_wire when (BITSEL_u4_u1_149_wire(0) /=  '0') else X2_145;
+    -- flow-through select operator MUX_65_inst
+    MUX_65_wire <= R_ONE_1_62_wire_constant when (reg_type_buffer(0) /=  '0') else type_cast_64_wire_constant;
+    -- flow-through select operator MUX_71_inst
+    MUX_71_wire <= type_cast_69_wire_constant when (reg_type_buffer(0) /=  '0') else R_ONE_1_70_wire_constant;
+    -- flow-through select operator MUX_91_inst
+    MUX_91_wire <= R_ONE_1_88_wire_constant when (reg_type_buffer(0) /=  '0') else type_cast_90_wire_constant;
+    -- flow-through select operator MUX_99_inst
+    X0_100 <= OR_u16_u16_97_wire when (BITSEL_u4_u1_81_wire(0) /=  '0') else temp_77;
+    -- binary operator BITSEL_u4_u1_104_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_103_wire_constant, tmp_var);
+      BITSEL_u4_u1_104_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u4_u1_126_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_125_wire_constant, tmp_var);
+      BITSEL_u4_u1_126_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u4_u1_149_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_148_wire_constant, tmp_var);
+      BITSEL_u4_u1_149_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u4_u1_81_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_80_wire_constant, tmp_var);
+      BITSEL_u4_u1_81_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u1_u14_75_inst
+    process(MUX_71_wire) -- 
+      variable tmp_var : std_logic_vector(13 downto 0); -- 
+    begin -- 
+      ApConcat_proc(MUX_71_wire, type_cast_74_wire_constant, tmp_var);
+      CONCAT_u1_u14_75_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u1_u2_66_inst
+    process(type_cast_60_wire_constant, MUX_65_wire) -- 
+      variable tmp_var : std_logic_vector(1 downto 0); -- 
+    begin -- 
+      ApConcat_proc(type_cast_60_wire_constant, MUX_65_wire, tmp_var);
+      CONCAT_u1_u2_66_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u1_u2_92_inst
+    process(type_cast_86_wire_constant, MUX_91_wire) -- 
+      variable tmp_var : std_logic_vector(1 downto 0); -- 
+    begin -- 
+      ApConcat_proc(type_cast_86_wire_constant, MUX_91_wire, tmp_var);
+      CONCAT_u1_u2_92_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u1_u3_115_inst
+    process(type_cast_109_wire_constant, MUX_114_wire) -- 
+      variable tmp_var : std_logic_vector(2 downto 0); -- 
+    begin -- 
+      ApConcat_proc(type_cast_109_wire_constant, MUX_114_wire, tmp_var);
+      CONCAT_u1_u3_115_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u1_u5_137_inst
+    process(type_cast_131_wire_constant, MUX_136_wire) -- 
+      variable tmp_var : std_logic_vector(4 downto 0); -- 
+    begin -- 
+      ApConcat_proc(type_cast_131_wire_constant, MUX_136_wire, tmp_var);
+      CONCAT_u1_u5_137_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u1_u9_160_inst
+    process(type_cast_154_wire_constant, MUX_159_wire) -- 
+      variable tmp_var : std_logic_vector(8 downto 0); -- 
+    begin -- 
+      ApConcat_proc(type_cast_154_wire_constant, MUX_159_wire, tmp_var);
+      CONCAT_u1_u9_160_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u2_u16_76_inst
+    process(CONCAT_u1_u2_66_wire, CONCAT_u1_u14_75_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApConcat_proc(CONCAT_u1_u2_66_wire, CONCAT_u1_u14_75_wire, tmp_var);
+      temp_77 <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u2_u16_96_inst
+    process(CONCAT_u1_u2_92_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApConcat_proc(CONCAT_u1_u2_92_wire, type_cast_95_wire_constant, tmp_var);
+      CONCAT_u2_u16_96_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u3_u16_118_inst
+    process(CONCAT_u1_u3_115_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApConcat_proc(CONCAT_u1_u3_115_wire, type_cast_117_wire_constant, tmp_var);
+      CONCAT_u3_u16_118_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u5_u16_141_inst
+    process(CONCAT_u1_u5_137_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApConcat_proc(CONCAT_u1_u5_137_wire, type_cast_140_wire_constant, tmp_var);
+      CONCAT_u5_u16_141_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u9_u16_164_inst
+    process(CONCAT_u1_u9_160_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApConcat_proc(CONCAT_u1_u9_160_wire, type_cast_163_wire_constant, tmp_var);
+      CONCAT_u9_u16_164_wire <= tmp_var; --
+    end process;
+    -- binary operator LSHR_u16_u16_107_inst
+    process(X0_100) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntLSHR_proc(X0_100, konst_106_wire_constant, tmp_var);
+      LSHR_u16_u16_107_wire <= tmp_var; --
+    end process;
+    -- binary operator LSHR_u16_u16_129_inst
+    process(X1_122) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntLSHR_proc(X1_122, konst_128_wire_constant, tmp_var);
+      LSHR_u16_u16_129_wire <= tmp_var; --
+    end process;
+    -- binary operator LSHR_u16_u16_152_inst
+    process(X2_145) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntLSHR_proc(X2_145, konst_151_wire_constant, tmp_var);
+      LSHR_u16_u16_152_wire <= tmp_var; --
+    end process;
+    -- binary operator LSHR_u16_u16_84_inst
+    process(temp_77) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntLSHR_proc(temp_77, konst_83_wire_constant, tmp_var);
+      LSHR_u16_u16_84_wire <= tmp_var; --
+    end process;
+    -- binary operator OR_u16_u16_119_inst
+    process(LSHR_u16_u16_107_wire, CONCAT_u3_u16_118_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(LSHR_u16_u16_107_wire, CONCAT_u3_u16_118_wire, tmp_var);
+      OR_u16_u16_119_wire <= tmp_var; --
+    end process;
+    -- binary operator OR_u16_u16_142_inst
+    process(LSHR_u16_u16_129_wire, CONCAT_u5_u16_141_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(LSHR_u16_u16_129_wire, CONCAT_u5_u16_141_wire, tmp_var);
+      OR_u16_u16_142_wire <= tmp_var; --
+    end process;
+    -- binary operator OR_u16_u16_165_inst
+    process(LSHR_u16_u16_152_wire, CONCAT_u9_u16_164_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(LSHR_u16_u16_152_wire, CONCAT_u9_u16_164_wire, tmp_var);
+      OR_u16_u16_165_wire <= tmp_var; --
+    end process;
+    -- binary operator OR_u16_u16_97_inst
+    process(LSHR_u16_u16_84_wire, CONCAT_u2_u16_96_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApIntOr_proc(LSHR_u16_u16_84_wire, CONCAT_u2_u16_96_wire, tmp_var);
+      OR_u16_u16_97_wire <= tmp_var; --
+    end process;
+    -- 
+  end Block; -- data_path
+  -- 
+end shift_toMake_regime_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity sll_16_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(15 downto 0);
+    shift : in  std_logic_vector(3 downto 0);
+    shifted : out  std_logic_vector(15 downto 0)-- 
+  );
+  -- 
+end entity sll_16_Volatile;
+architecture sll_16_Volatile_arch of sll_16_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(20-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(15 downto 0);
+  signal shift_buffer :  std_logic_vector(3 downto 0);
+  -- output port buffer signals
+  signal shifted_buffer :  std_logic_vector(15 downto 0);
+  -- volatile/operator module components. 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  shift_buffer <= shift;
+  -- output handling  -------------------------------------------------------
+  shifted <= shifted_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal BITSEL_u4_u1_343_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u4_u1_356_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u4_u1_368_wire : std_logic_vector(0 downto 0);
+    signal BITSEL_u4_u1_381_wire : std_logic_vector(0 downto 0);
+    signal CONCAT_u12_u16_374_wire : std_logic_vector(15 downto 0);
+    signal CONCAT_u14_u16_361_wire : std_logic_vector(15 downto 0);
+    signal CONCAT_u15_u16_349_wire : std_logic_vector(15 downto 0);
+    signal CONCAT_u8_u16_386_wire : std_logic_vector(15 downto 0);
+    signal X0_352 : std_logic_vector(15 downto 0);
+    signal X1_364 : std_logic_vector(15 downto 0);
+    signal X2_377 : std_logic_vector(15 downto 0);
+    signal X3_389 : std_logic_vector(15 downto 0);
+    signal konst_342_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_355_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_367_wire_constant : std_logic_vector(3 downto 0);
+    signal konst_380_wire_constant : std_logic_vector(3 downto 0);
+    signal slice_346_wire : std_logic_vector(14 downto 0);
+    signal slice_358_wire : std_logic_vector(13 downto 0);
+    signal slice_371_wire : std_logic_vector(11 downto 0);
+    signal slice_383_wire : std_logic_vector(7 downto 0);
+    signal type_cast_348_wire_constant : std_logic_vector(0 downto 0);
+    signal type_cast_360_wire_constant : std_logic_vector(1 downto 0);
+    signal type_cast_373_wire_constant : std_logic_vector(3 downto 0);
+    signal type_cast_385_wire_constant : std_logic_vector(7 downto 0);
+    -- 
+  begin -- 
+    konst_342_wire_constant <= "0000";
+    konst_355_wire_constant <= "0001";
+    konst_367_wire_constant <= "0010";
+    konst_380_wire_constant <= "0011";
+    type_cast_348_wire_constant <= "0";
+    type_cast_360_wire_constant <= "00";
+    type_cast_373_wire_constant <= "0000";
+    type_cast_385_wire_constant <= "00000000";
+    -- flow-through select operator MUX_351_inst
+    X0_352 <= CONCAT_u15_u16_349_wire when (BITSEL_u4_u1_343_wire(0) /=  '0') else num_buffer;
+    -- flow-through select operator MUX_363_inst
+    X1_364 <= CONCAT_u14_u16_361_wire when (BITSEL_u4_u1_356_wire(0) /=  '0') else X0_352;
+    -- flow-through select operator MUX_376_inst
+    X2_377 <= CONCAT_u12_u16_374_wire when (BITSEL_u4_u1_368_wire(0) /=  '0') else X1_364;
+    -- flow-through select operator MUX_388_inst
+    X3_389 <= CONCAT_u8_u16_386_wire when (BITSEL_u4_u1_381_wire(0) /=  '0') else X2_377;
+    -- flow-through slice operator slice_346_inst
+    slice_346_wire <= num_buffer(14 downto 0);
+    -- flow-through slice operator slice_358_inst
+    slice_358_wire <= X0_352(13 downto 0);
+    -- flow-through slice operator slice_371_inst
+    slice_371_wire <= X1_364(11 downto 0);
+    -- flow-through slice operator slice_383_inst
+    slice_383_wire <= X2_377(7 downto 0);
+    -- interlock W_shifted_390_inst
+    process(X3_389) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 15 downto 0) := X3_389(15 downto 0);
+      shifted_buffer <= tmp_var; -- 
+    end process;
+    -- binary operator BITSEL_u4_u1_343_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_342_wire_constant, tmp_var);
+      BITSEL_u4_u1_343_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u4_u1_356_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_355_wire_constant, tmp_var);
+      BITSEL_u4_u1_356_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u4_u1_368_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_367_wire_constant, tmp_var);
+      BITSEL_u4_u1_368_wire <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u4_u1_381_inst
+    process(shift_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shift_buffer, konst_380_wire_constant, tmp_var);
+      BITSEL_u4_u1_381_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u12_u16_374_inst
+    process(slice_371_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApConcat_proc(slice_371_wire, type_cast_373_wire_constant, tmp_var);
+      CONCAT_u12_u16_374_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u14_u16_361_inst
+    process(slice_358_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApConcat_proc(slice_358_wire, type_cast_360_wire_constant, tmp_var);
+      CONCAT_u14_u16_361_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u15_u16_349_inst
+    process(slice_346_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApConcat_proc(slice_346_wire, type_cast_348_wire_constant, tmp_var);
+      CONCAT_u15_u16_349_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u8_u16_386_inst
+    process(slice_383_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApConcat_proc(slice_383_wire, type_cast_385_wire_constant, tmp_var);
+      CONCAT_u8_u16_386_wire <= tmp_var; --
+    end process;
+    -- 
+  end Block; -- data_path
+  -- 
+end sll_16_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity split_posit_Volatile is -- 
+  port ( -- 
+    num : in  std_logic_vector(15 downto 0);
+    sign : out  std_logic_vector(0 downto 0);
+    exp : out  std_logic_vector(5 downto 0);
+    fraction : out  std_logic_vector(11 downto 0)-- 
+  );
+  -- 
+end entity split_posit_Volatile;
+architecture split_posit_Volatile_arch of split_posit_Volatile is -- 
+  -- always true...
+  signal always_true_symbol: Boolean;
+  signal in_buffer_data_in, in_buffer_data_out: std_logic_vector(16-1 downto 0);
+  signal default_zero_sig: std_logic;
+  -- input port buffer signals
+  signal num_buffer :  std_logic_vector(15 downto 0);
+  -- output port buffer signals
+  signal sign_buffer :  std_logic_vector(0 downto 0);
+  signal exp_buffer :  std_logic_vector(5 downto 0);
+  signal fraction_buffer :  std_logic_vector(11 downto 0);
+  -- volatile/operator module components. 
+  component find_leftmost_bit_16_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(15 downto 0);
+      bit : in  std_logic_vector(0 downto 0);
+      index : out  std_logic_vector(5 downto 0);
+      not_found : out  std_logic_vector(0 downto 0)-- 
+    );
+    -- 
+  end component; 
+  component sll_16_Volatile is -- 
+    port ( -- 
+      num : in  std_logic_vector(15 downto 0);
+      shift : in  std_logic_vector(3 downto 0);
+      shifted : out  std_logic_vector(15 downto 0)-- 
+    );
+    -- 
+  end component; 
+  -- 
+begin --  
+  -- input handling ------------------------------------------------
+  num_buffer <= num;
+  -- output handling  -------------------------------------------------------
+  sign <= sign_buffer;
+  exp <= exp_buffer;
+  fraction <= fraction_buffer;
+  -- the control path --------------------------------------------------
+  default_zero_sig <= '0';
+  -- volatile module, no control path
+  -- the data path
+  data_path: Block -- 
+    signal ADD_u6_u6_985_wire : std_logic_vector(5 downto 0);
+    signal BITSEL_u16_u1_978_wire : std_logic_vector(0 downto 0);
+    signal MUX_989_wire : std_logic_vector(5 downto 0);
+    signal NOT_u1_u1_937_wire : std_logic_vector(0 downto 0);
+    signal R_ONE_2_924_wire_constant : std_logic_vector(1 downto 0);
+    signal SUB_u6_u6_944_wire : std_logic_vector(5 downto 0);
+    signal SUB_u6_u6_950_wire : std_logic_vector(5 downto 0);
+    signal SUB_u6_u6_962_wire : std_logic_vector(5 downto 0);
+    signal SUB_u6_u6_988_wire : std_logic_vector(5 downto 0);
+    signal exp_biased_992 : std_logic_vector(5 downto 0);
+    signal exp_bit_980 : std_logic_vector(5 downto 0);
+    signal exp_shift_952 : std_logic_vector(3 downto 0);
+    signal frac_shift_946 : std_logic_vector(3 downto 0);
+    signal index_940 : std_logic_vector(5 downto 0);
+    signal konst_1003_wire_constant : std_logic_vector(15 downto 0);
+    signal konst_919_wire_constant : std_logic_vector(15 downto 0);
+    signal konst_942_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_948_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_954_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_961_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_967_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_977_wire_constant : std_logic_vector(15 downto 0);
+    signal konst_983_wire_constant : std_logic_vector(5 downto 0);
+    signal konst_986_wire_constant : std_logic_vector(5 downto 0);
+    signal not_found_940 : std_logic_vector(0 downto 0);
+    signal reg_cnt_957 : std_logic_vector(5 downto 0);
+    signal reg_cnt_gen_965 : std_logic_vector(5 downto 0);
+    signal reg_mul2_970 : std_logic_vector(5 downto 0);
+    signal regime_bit_921 : std_logic_vector(0 downto 0);
+    signal shifted_frac_996 : std_logic_vector(15 downto 0);
+    signal shifted_to_find_exp_974 : std_logic_vector(15 downto 0);
+    signal slice_932_wire : std_logic_vector(13 downto 0);
+    signal start_2_bits_928 : std_logic_vector(1 downto 0);
+    signal temp_num_934 : std_logic_vector(15 downto 0);
+    signal type_cast_926_wire_constant : std_logic_vector(1 downto 0);
+    signal xxsplit_positxxONE_2 : std_logic_vector(1 downto 0);
+    -- 
+  begin -- 
+    R_ONE_2_924_wire_constant <= "11";
+    konst_1003_wire_constant <= "0000000000001111";
+    konst_919_wire_constant <= "0000000000001110";
+    konst_942_wire_constant <= "010001";
+    konst_948_wire_constant <= "010000";
+    konst_954_wire_constant <= "001110";
+    konst_961_wire_constant <= "000001";
+    konst_967_wire_constant <= "000010";
+    konst_977_wire_constant <= "0000000000001111";
+    konst_983_wire_constant <= "011100";
+    konst_986_wire_constant <= "011100";
+    type_cast_926_wire_constant <= "00";
+    xxsplit_positxxONE_2 <= "11";
+    -- flow-through select operator MUX_927_inst
+    start_2_bits_928 <= R_ONE_2_924_wire_constant when (regime_bit_921(0) /=  '0') else type_cast_926_wire_constant;
+    -- flow-through select operator MUX_964_inst
+    reg_cnt_gen_965 <= SUB_u6_u6_962_wire when (regime_bit_921(0) /=  '0') else reg_cnt_957;
+    -- flow-through select operator MUX_989_inst
+    MUX_989_wire <= ADD_u6_u6_985_wire when (regime_bit_921(0) /=  '0') else SUB_u6_u6_988_wire;
+    -- flow-through slice operator slice_1008_inst
+    fraction_buffer <= shifted_frac_996(15 downto 4);
+    -- flow-through slice operator slice_932_inst
+    slice_932_wire <= num_buffer(13 downto 0);
+    -- interlock type_cast_945_inst
+    process(SUB_u6_u6_944_wire) -- 
+      variable tmp_var : std_logic_vector(3 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 3 downto 0) := SUB_u6_u6_944_wire(3 downto 0);
+      frac_shift_946 <= tmp_var; -- 
+    end process;
+    -- interlock type_cast_951_inst
+    process(SUB_u6_u6_950_wire) -- 
+      variable tmp_var : std_logic_vector(3 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 3 downto 0) := SUB_u6_u6_950_wire(3 downto 0);
+      exp_shift_952 <= tmp_var; -- 
+    end process;
+    -- interlock type_cast_979_inst
+    process(BITSEL_u16_u1_978_wire) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 0 downto 0) := BITSEL_u16_u1_978_wire(0 downto 0);
+      exp_bit_980 <= tmp_var; -- 
+    end process;
+    -- interlock type_cast_999_inst
+    process(exp_biased_992) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      tmp_var := (others => '0'); 
+      tmp_var( 5 downto 0) := exp_biased_992(5 downto 0);
+      exp_buffer <= tmp_var; -- 
+    end process;
+    -- binary operator ADD_u6_u6_985_inst
+    process(reg_mul2_970) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(reg_mul2_970, konst_983_wire_constant, tmp_var);
+      ADD_u6_u6_985_wire <= tmp_var; --
+    end process;
+    -- binary operator ADD_u6_u6_991_inst
+    process(MUX_989_wire, exp_bit_980) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntAdd_proc(MUX_989_wire, exp_bit_980, tmp_var);
+      exp_biased_992 <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u16_u1_1004_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(num_buffer, konst_1003_wire_constant, tmp_var);
+      sign_buffer <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u16_u1_920_inst
+    process(num_buffer) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(num_buffer, konst_919_wire_constant, tmp_var);
+      regime_bit_921 <= tmp_var; --
+    end process;
+    -- binary operator BITSEL_u16_u1_978_inst
+    process(shifted_to_find_exp_974) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      ApBitsel_proc(shifted_to_find_exp_974, konst_977_wire_constant, tmp_var);
+      BITSEL_u16_u1_978_wire <= tmp_var; --
+    end process;
+    -- binary operator CONCAT_u2_u16_933_inst
+    process(start_2_bits_928, slice_932_wire) -- 
+      variable tmp_var : std_logic_vector(15 downto 0); -- 
+    begin -- 
+      ApConcat_proc(start_2_bits_928, slice_932_wire, tmp_var);
+      temp_num_934 <= tmp_var; --
+    end process;
+    -- binary operator MUL_u6_u6_969_inst
+    process(reg_cnt_gen_965) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntMul_proc(reg_cnt_gen_965, konst_967_wire_constant, tmp_var);
+      reg_mul2_970 <= tmp_var; --
+    end process;
+    -- unary operator NOT_u1_u1_937_inst
+    process(regime_bit_921) -- 
+      variable tmp_var : std_logic_vector(0 downto 0); -- 
+    begin -- 
+      SingleInputOperation("ApIntNot", regime_bit_921, tmp_var);
+      NOT_u1_u1_937_wire <= tmp_var; -- 
+    end process;
+    -- binary operator SUB_u6_u6_944_inst
+    process(konst_942_wire_constant, index_940) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(konst_942_wire_constant, index_940, tmp_var);
+      SUB_u6_u6_944_wire <= tmp_var; --
+    end process;
+    -- binary operator SUB_u6_u6_950_inst
+    process(konst_948_wire_constant, index_940) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(konst_948_wire_constant, index_940, tmp_var);
+      SUB_u6_u6_950_wire <= tmp_var; --
+    end process;
+    -- binary operator SUB_u6_u6_956_inst
+    process(konst_954_wire_constant, index_940) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(konst_954_wire_constant, index_940, tmp_var);
+      reg_cnt_957 <= tmp_var; --
+    end process;
+    -- binary operator SUB_u6_u6_962_inst
+    process(reg_cnt_957) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(reg_cnt_957, konst_961_wire_constant, tmp_var);
+      SUB_u6_u6_962_wire <= tmp_var; --
+    end process;
+    -- binary operator SUB_u6_u6_988_inst
+    process(konst_986_wire_constant, reg_mul2_970) -- 
+      variable tmp_var : std_logic_vector(5 downto 0); -- 
+    begin -- 
+      ApIntSub_proc(konst_986_wire_constant, reg_mul2_970, tmp_var);
+      SUB_u6_u6_988_wire <= tmp_var; --
+    end process;
+    volatile_operator_find_leftmost_bit_16_895: find_leftmost_bit_16_Volatile port map(num => temp_num_934, bit => NOT_u1_u1_937_wire, index => index_940, not_found => not_found_940); 
+    volatile_operator_sll_16_904: sll_16_Volatile port map(num => num_buffer, shift => exp_shift_952, shifted => shifted_to_find_exp_974); 
+    volatile_operator_sll_16_911: sll_16_Volatile port map(num => num_buffer, shift => frac_shift_946, shifted => shifted_frac_996); 
+    -- 
+  end Block; -- data_path
+  -- 
+end split_posit_Volatile_arch;
+library std;
+use std.standard.all;
+library ieee;
+use ieee.std_logic_1164.all;
+library aHiR_ieee_proposed;
+use aHiR_ieee_proposed.math_utility_pkg.all;
+use aHiR_ieee_proposed.fixed_pkg.all;
+use aHiR_ieee_proposed.float_pkg.all;
+library ahir;
+use ahir.memory_subsystem_package.all;
+use ahir.types.all;
+use ahir.subprograms.all;
+use ahir.components.all;
+use ahir.basecomponents.all;
+use ahir.operatorpackage.all;
+use ahir.floatoperatorpackage.all;
+use ahir.utilities.all;
+library work;
+use work.ahir_system_global_package.all;
+entity ahir_system is  -- system 
+  port (-- 
+    pmul19_P1 : in  std_logic_vector(15 downto 0);
+    pmul19_P2 : in  std_logic_vector(15 downto 0);
+    pmul19_result : out  std_logic_vector(15 downto 0);
+    pmul19_tag_in: in std_logic_vector(1 downto 0);
+    pmul19_tag_out: out std_logic_vector(1 downto 0);
+    pmul19_start_req : in std_logic;
+    pmul19_start_ack : out std_logic;
+    pmul19_fin_req   : in std_logic;
+    pmul19_fin_ack   : out std_logic;
+    clk : in std_logic;
+    reset : in std_logic); -- 
+  -- 
+end entity; 
+architecture ahir_system_arch  of ahir_system is -- system-architecture 
+  -- declarations related to module FP19_to_posit16
+  -- declarations related to module check_overflow_underflow
+  -- declarations related to module classifyFp19
+  -- declarations related to module classify_FP19
+  -- declarations related to module classify_posit
+  -- declarations related to module complement
+  -- declarations related to module find_leftmost_bit_16
+  -- declarations related to module find_leftmost_bit_2
+  -- declarations related to module find_leftmost_bit_4
+  -- declarations related to module find_leftmost_bit_8
+  -- declarations related to module fmul19
+  -- declarations related to module make_exponent
+  -- declarations related to module make_fraction
+  -- declarations related to module pmul19
+  component pmul19 is -- 
+    generic (tag_length : integer); 
+    port ( -- 
+      P1 : in  std_logic_vector(15 downto 0);
+      P2 : in  std_logic_vector(15 downto 0);
+      result : out  std_logic_vector(15 downto 0);
+      tag_in: in std_logic_vector(tag_length-1 downto 0);
+      tag_out: out std_logic_vector(tag_length-1 downto 0) ;
+      clk : in std_logic;
+      reset : in std_logic;
+      start_req : in std_logic;
+      start_ack : out std_logic;
+      fin_req : in std_logic;
+      fin_ack   : out std_logic-- 
+    );
+    -- 
+  end component;
+  -- declarations related to module posit16_to_FP19
+  -- declarations related to module shift_toMake_fraction
+  -- declarations related to module shift_toMake_regime
+  -- declarations related to module sll_16
+  -- declarations related to module split_posit
+  -- gated clock signal declarations.
+  -- 
+begin -- 
+  -- module pmul19
+  pmul19_instance:pmul19-- 
+    generic map(tag_length => 2)
+    port map(-- 
+      P1 => pmul19_P1,
+      P2 => pmul19_P2,
+      result => pmul19_result,
+      start_req => pmul19_start_req,
+      start_ack => pmul19_start_ack,
+      fin_req => pmul19_fin_req,
+      fin_ack => pmul19_fin_ack,
+      clk => clk,
+      reset => reset,
+      tag_in => pmul19_tag_in,
+      tag_out => pmul19_tag_out-- 
+    ); -- 
+  -- gated clock generators 
+  -- 
+end ahir_system_arch;

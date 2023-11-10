@@ -1,0 +1,11 @@
+digraph data_path {
+  exp_666 [shape=ellipse];
+  konst_669_wire_constant [shape=ellipse];
+  ULT_u6_u1_670_inst [shape=rectangle];
+exp_666  -> ULT_u6_u1_670_inst;
+konst_669_wire_constant  -> ULT_u6_u1_670_inst;
+ULT_u6_u1_670_inst -> normal;
+  slice_665_inst [shape=diamond];
+num  -> slice_665_inst;
+slice_665_inst -> exp_666;
+}
